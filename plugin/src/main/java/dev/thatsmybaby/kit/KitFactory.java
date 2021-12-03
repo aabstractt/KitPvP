@@ -1,7 +1,6 @@
 package dev.thatsmybaby.kit;
 
 import cn.nukkit.utils.Config;
-import com.google.gson.Gson;
 import dev.thatsmybaby.KitPvP;
 import lombok.Getter;
 
@@ -16,15 +15,18 @@ public class KitFactory {
     @Getter
     private final Map<String, Kit> kits = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     public void init() {
-        File file = new File(KitPvP.getInstance().getDataFolder(), "kits.json");
+        File file = new File(KitPvP.getInstance().getDataFolder(), "kits.yml");
 
         if (!file.exists()) {
             return;
         }
 
-        for (Object kitObject : (new Config(file)).getAll().values()) {
-            this.addKit(new Gson().fromJson(kitObject.toString(), Kit.class), false);
+        for (Map.Entry<String, Object> entry : (new Config(file, Config.YAML)).getAll().entrySet()) {
+            KitPvP.getInstance().getLogger().info("Loading " + entry.getKey() + " kit...");
+
+            this.addKit(Kit.deserialize(entry.getKey(), (Map<String, Map<Integer, String>>) entry.getValue()), false);
         }
     }
 
@@ -32,11 +34,11 @@ public class KitFactory {
         this.kits.put(kit.getKitName(), kit);
 
         if (save) {
-            Config config = new Config(new File(KitPvP.getInstance().getDataFolder(), "kits.json"));
+            Config config = new Config(new File(KitPvP.getInstance().getDataFolder(), "kits.yml"), Config.YAML);
 
-            for (Kit kits : this.kits.values()) {
-                config.set(kits.getKitName(), new Gson().toJson(kit));
-            }
+            config.set(kit.getKitName(), kit.serialize());
+
+            System.out.println(config.get(kit.getKitName()));
 
             config.save();
         }
