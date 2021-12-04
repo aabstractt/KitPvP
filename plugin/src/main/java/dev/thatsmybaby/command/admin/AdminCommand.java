@@ -2,6 +2,7 @@ package dev.thatsmybaby.command.admin;
 
 import dev.thatsmybaby.command.Command;
 import dev.thatsmybaby.command.admin.subcommand.SpawnNpcSubCommand;
+import dev.thatsmybaby.command.admin.subcommand.ZoneSubCommand;
 
 public class AdminCommand extends Command {
 
@@ -9,7 +10,8 @@ public class AdminCommand extends Command {
         super(name, description, usageMessage, aliases);
 
         addCommand(
-                new SpawnNpcSubCommand("spawnnpc", "admin.command.spawnnpc")
+                new SpawnNpcSubCommand("spawnnpc", "admin.command.spawnnpc"),
+                new ZoneSubCommand("zone", "admin.command.zone")
         );
     }
 }

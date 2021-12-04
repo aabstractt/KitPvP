@@ -10,6 +10,8 @@ import cn.nukkit.utils.LoginChainData;
 import cn.nukkit.utils.TextFormat;
 import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
+import dev.thatsmybaby.provider.MysqlProvider;
+import dev.thatsmybaby.provider.PlayerStorage;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,19 +57,31 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
-        if (world != null) {
-            player.teleport(Server.getInstance().getLevelByName(world).getSpawnLocation());
-        }
+        TaskUtils.runAsync(() -> {
+            PlayerStorage playerStorage = MysqlProvider.getInstance().getPlayerStorage(player.getName());
 
-        player.getInventory().clearAll();
+            if (playerStorage == null) {
+                playerStorage = new PlayerStorage(player.getName());
+            }
 
-        player.extinguish();
-        player.setGamemode(2);
-        player.removeAllEffects();
-        player.setExperience(0, 0);
+            PlayerStorage.players.put(player.getName().toLowerCase(), playerStorage);
 
-        player.setHealth(player.getMaxHealth());
-        player.getFoodData().reset();
-        player.setFoodEnabled(false);
+            TaskUtils.runLater(() -> {
+                if (world != null) {
+                    player.teleport(Server.getInstance().getLevelByName(world).getSpawnLocation());
+                }
+
+                player.getInventory().clearAll();
+
+                player.extinguish();
+                player.setGamemode(2);
+                player.removeAllEffects();
+                player.setExperience(0, 0);
+
+                player.setHealth(player.getMaxHealth());
+                player.getFoodData().reset();
+                player.setFoodEnabled(false);
+            }, 20);
+        });
     }
 }

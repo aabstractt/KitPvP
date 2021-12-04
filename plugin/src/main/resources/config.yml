@@ -2,3 +2,10 @@ type:
   PC: "world"
   Console: "world"
   Mobile: "world"
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  password: ""
+  user: "root"
+  dbname: """
