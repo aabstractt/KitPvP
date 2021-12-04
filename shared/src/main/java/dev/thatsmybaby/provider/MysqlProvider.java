@@ -56,13 +56,13 @@ public class MysqlProvider {
                 preparedStatement = this.connection.prepareStatement("INSERT INTO player_stats(username, kills, betterKillStreak, deaths) VALUES (?, ?, ?, ?)");
 
                 preparedStatement.setString(1, playerStorage.getName());
-                preparedStatement.setInt(2, playerStorage.getKills());
+                preparedStatement.setInt(2, playerStorage.getTotalKills());
                 preparedStatement.setInt(3, playerStorage.getBetterKillStreak());
                 preparedStatement.setInt(4, playerStorage.getDeaths());
             } else {
                 preparedStatement = this.connection.prepareStatement("UPDATE player_stats SET kills = ?, betterKillStreak = ?, deaths = ? WHERE username = ?");
 
-                preparedStatement.setInt(1, playerStorage.getKills());
+                preparedStatement.setInt(1, playerStorage.getTotalKills());
                 preparedStatement.setInt(2, playerStorage.getBetterKillStreak());
                 preparedStatement.setInt(3, playerStorage.getDeaths());
                 preparedStatement.setString(4, playerStorage.getName());

@@ -24,7 +24,7 @@ public class ZoneFactory {
 
         Config config = new Config(file, Config.YAML);
 
-        for (String k : config.getKeys()) {
+        for (String k : config.getKeys(false)) {
             this.zoneList.add(new Zone(mapToVector(config.get(k + ".min", new HashMap<>())), mapToVector(config.get(k + ".max", new HashMap<>()))));
         }
     }

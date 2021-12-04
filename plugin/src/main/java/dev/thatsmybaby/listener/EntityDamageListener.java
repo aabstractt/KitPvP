@@ -79,14 +79,15 @@ public class EntityDamageListener implements Listener {
             if(dmg < 1.0) {
                 ev.setCancelled(true);
 
-                PlayerStorage.of(entity).death();
+                handleDeath(entity, damager);
 
-                Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> {
-                    entity.setHealth(20);
+                targetStorage.increaseKills();
+                playerStorage.death();
 
-                    targetStorage.attack(null);
-                    playerStorage.attack(null);
-                }, 3);
+                targetStorage.attack(null);
+                playerStorage.attack(null);
+
+                Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> entity.setHealth(20), 3);
             }
 
             return;
@@ -142,14 +143,15 @@ public class EntityDamageListener implements Listener {
             if(dmg < 1.0) {
                 ev.setCancelled(true);
 
-                PlayerStorage.of(entity).death();
+                handleDeath(entity, shooter);
 
-                Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> {
-                    entity.setHealth(20);
+                targetStorage.increaseKills();
+                playerStorage.death();
 
-                    targetStorage.attack(null);
-                    playerStorage.attack(null);
-                }, 3);
+                targetStorage.attack(null);
+                playerStorage.attack(null);
+
+                Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> entity.setHealth(20), 3);
             }
 
             return;
@@ -162,5 +164,17 @@ public class EntityDamageListener implements Listener {
         Player lastAttack = playerStorage.getLastAttack();
 
         return lastAttack != null && lastAttack.equals(target);
+    }
+
+    private void handleDeath(Player player, Player killer) {
+        String message = KitPvP.getInstance().replacePlaceholders("PLAYER_KILLED", "<player>", player.getName());
+
+        if (killer != null) {
+            message = KitPvP.getInstance().replacePlaceholders("PLAYER_KILLED_BY", "<player>", player.getName(), "<killer>", killer.getName());
+        }
+
+        for (Player target : player.getLevel().getPlayers().values()) {
+            target.sendMessage(message);
+        }
     }
 }
