@@ -9,6 +9,7 @@ import cn.nukkit.event.entity.EntityDamageByChildEntityEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import dev.thatsmybaby.KitPvP;
+import dev.thatsmybaby.TaskUtils;
 import dev.thatsmybaby.provider.PlayerStorage;
 import dev.thatsmybaby.zone.ZoneFactory;
 
@@ -16,30 +17,26 @@ public class EntityDamageListener implements Listener {
 
     @EventHandler
     public void onEntityDamageEvent(EntityDamageEvent ev) {
-        if(ev.getEntity() instanceof Player) {
-            Player player = (Player) ev.getEntity();
-
-            if (ZoneFactory.getInstance().inZone(player)) {
-                ev.setCancelled();
-
-                return;
-            }
-
-            if(ev.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK && ev.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) {
-                ev.setCancelled(true);
-
-                return;
-            }
+        if (!(ev.getEntity() instanceof Player)) {
+            ev.setCancelled();
 
             return;
         }
 
-        ev.setCancelled(true);
+        if (ZoneFactory.getInstance().inZone(ev.getEntity())) {
+            ev.setCancelled();
+
+            return;
+        }
+
+        if (ev.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK && ev.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) {
+            ev.setCancelled(true);
+        }
     }
 
     @EventHandler
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent ev) {
-        if(ev.getDamager() instanceof Player && ev.getEntity() instanceof Player) {
+        if (ev.getDamager() instanceof Player && ev.getEntity() instanceof Player) {
 
             Player damager = (Player) ev.getDamager();
             Player entity = (Player) ev.getEntity();
@@ -76,7 +73,7 @@ public class EntityDamageListener implements Listener {
 
             double dmg = entity.getHealth() - ev.getFinalDamage();
 
-            if(dmg < 1.0) {
+            if (dmg < 1.0) {
                 ev.setCancelled(true);
 
                 handleDeath(entity, damager);
@@ -87,7 +84,8 @@ public class EntityDamageListener implements Listener {
                 targetStorage.attack(null);
                 playerStorage.attack(null);
 
-                Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> entity.setHealth(20), 3);
+                TaskUtils.runLater(() -> entity.setHealth(20), 3);
+                //Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> entity.setHealth(20), 3);
             }
 
             return;
@@ -98,7 +96,7 @@ public class EntityDamageListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByChildEntityEvent(EntityDamageByChildEntityEvent ev) {
-        if(ev.getChild() instanceof EntityArrow && ev.getEntity() instanceof Player) {
+        if (ev.getChild() instanceof EntityArrow && ev.getEntity() instanceof Player) {
             Player shooter = (Player) ev.getDamager();
             Player entity = (Player) ev.getEntity();
 
@@ -114,7 +112,7 @@ public class EntityDamageListener implements Listener {
                 return;
             }
 
-            if(shooter.getUniqueId().equals(entity.getUniqueId())) {
+            if (shooter.getUniqueId().equals(entity.getUniqueId())) {
                 ev.setCancelled(true);
 
                 return;
@@ -140,7 +138,7 @@ public class EntityDamageListener implements Listener {
 
             float dmg = entity.getHealth() - ev.getFinalDamage();
 
-            if(dmg < 1.0) {
+            if (dmg < 1.0) {
                 ev.setCancelled(true);
 
                 handleDeath(entity, shooter);
@@ -151,7 +149,8 @@ public class EntityDamageListener implements Listener {
                 targetStorage.attack(null);
                 playerStorage.attack(null);
 
-                Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> entity.setHealth(20), 3);
+                TaskUtils.runLater(() -> entity.setHealth(20), 3);
+                //Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> entity.setHealth(20), 3);
             }
 
             return;
