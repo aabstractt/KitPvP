@@ -1,0 +1,6 @@
+KIT_WINDOW_TITLE: "&e&lKIT SELECTOR"
+KIT_WINDOW_CONTENT: "&eSelect a kit"
+KIT_BUTTON: "&8<kit_name>\n&fClick to select"
+
+KITS_NOT_FOUND: "&cKits available not found"
+KIT_SELECTED: "&aKit <kit_name> selected!"
