@@ -65,7 +65,7 @@ public class EntityDamageListener implements Listener {
                 return;
             }
 
-            if (!canAttack(playerStorage, damager) || !canAttack(targetStorage, entity)) {
+            if (cancelAttack(playerStorage, damager) || cancelAttack(targetStorage, entity)) {
                 ev.setCancelled();
 
                 return;
@@ -129,7 +129,7 @@ public class EntityDamageListener implements Listener {
                 return;
             }
 
-            if (!canAttack(playerStorage, shooter) || !canAttack(targetStorage, entity)) {
+            if (cancelAttack(playerStorage, shooter) || cancelAttack(targetStorage, entity)) {
                 ev.setCancelled();
 
                 return;
@@ -160,7 +160,7 @@ public class EntityDamageListener implements Listener {
         ev.setCancelled(true);
     }
 
-    private boolean canAttack(PlayerStorage playerStorage, Player target) {
+    private boolean cancelAttack(PlayerStorage playerStorage, Player target) {
         Player lastAttack = playerStorage.getLastAttack();
 
         return lastAttack != null && lastAttack.equals(target);

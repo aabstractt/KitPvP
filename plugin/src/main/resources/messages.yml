@@ -4,3 +4,6 @@ KIT_BUTTON: "&8<kit_name>\n&fClick to select"
 
 KITS_NOT_FOUND: "&cKits available not found"
 KIT_SELECTED: "&aKit <kit_name> selected!"
+
+PLAYER_KILLED: "&a<player> was killed!"
+PLAYER_KILLED_BY: "&c<player> was killed by <killer>"
