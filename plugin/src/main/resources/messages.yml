@@ -16,3 +16,5 @@ GAME_BUTTON_MOBILE: "Mobile\n<players_count> Playing!"
 GAME_BUTTON_CONSOLE: "Console\n<players_count> Playing!"
 
 INVALID_DEVICE: "Join using; "
+
+SCOREBOARD_TITLE: "&b&lKITPVP"

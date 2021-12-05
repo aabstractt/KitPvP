@@ -1,5 +1,6 @@
 package dev.thatsmybaby.zone;
 
+import cn.nukkit.Server;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.utils.Config;
 import dev.thatsmybaby.KitPvP;
@@ -16,6 +17,10 @@ public class ZoneFactory {
     private final List<Zone> zoneList = new ArrayList<>();
 
     public void init() {
+        for (String worldName : KitPvP.getInstance().getConfig().getStringList("worlds")) {
+            Server.getInstance().loadLevel(worldName);
+        }
+
         File file = new File(KitPvP.getInstance().getDataFolder(), "zones.yml");
 
         if (!file.exists()) {

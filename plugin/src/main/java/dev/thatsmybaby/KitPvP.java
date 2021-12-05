@@ -1,18 +1,17 @@
 package dev.thatsmybaby;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
-import dev.thatsmybaby.command.kit.KitCommand;
 import dev.thatsmybaby.command.admin.AdminCommand;
+import dev.thatsmybaby.command.kit.KitCommand;
 import dev.thatsmybaby.entity.GameSelectorEntity;
+import dev.thatsmybaby.entity.KitSelectorEntity;
 import dev.thatsmybaby.kit.KitFactory;
 import dev.thatsmybaby.listener.*;
-import dev.thatsmybaby.entity.KitSelectorEntity;
 import dev.thatsmybaby.provider.MysqlProvider;
 import dev.thatsmybaby.zone.ZoneFactory;
 import lombok.Getter;
@@ -53,12 +52,16 @@ public class KitPvP extends PluginBase {
             getServer().getCommandMap().register("admin", new AdminCommand("admin", "Admin commands", "", new String[0]));
             getServer().getCommandMap().register("kit", new KitCommand("kit", "Kit command", "", new String[0]));
 
+            getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
             getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
             getServer().getPluginManager().registerEvents(new CraftItemListener(), this);
             getServer().getPluginManager().registerEvents(new ItemDropListener(), this);
             getServer().getPluginManager().registerEvents(new LevelBlockListener(), this);
+            getServer().getPluginManager().registerEvents(new EntityLevelChangeListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerFormRespondedListener(), this);
+
+            getServer().getScheduler().scheduleRepeatingTask(new ScoreboardUpdateTask(this.getConfig().getStringList("worlds")), 20);
         } catch (SQLException e) {
             e.printStackTrace();
 

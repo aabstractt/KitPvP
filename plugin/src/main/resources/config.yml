@@ -22,4 +22,15 @@ mysql:
   port: 3306
   password: ""
   user: "root"
-  dbname: """
+  dbname: ""
+
+worlds:
+  - "world"
+
+scoreboard:
+  - "Kills: <kills>"
+  - "Total kills: <totalKills>"
+  - "Killstreak: <killStreak>"
+  - "BetterKillStreak: <betterKillStreak>"
+  - "Deaths: <deaths>"
+  - "Online: <world_online>"
