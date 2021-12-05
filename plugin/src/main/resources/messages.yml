@@ -7,3 +7,12 @@ KIT_SELECTED: "&aKit <kit_name> selected!"
 
 PLAYER_KILLED: "&a<player> was killed!"
 PLAYER_KILLED_BY: "&c<player> was killed by <killer>"
+
+GAME_SELECTOR_TITLE: "Select a type"
+GAME_SELECTOR_CONTENT: ""
+
+GAME_BUTTON_PC: "PC\n<players_count> Playing!"
+GAME_BUTTON_MOBILE: "Mobile\n<players_count> Playing!"
+GAME_BUTTON_CONSOLE: "Console\n<players_count> Playing!"
+
+INVALID_DEVICE: "Join using; "

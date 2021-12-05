@@ -1,7 +1,21 @@
 type:
-  PC: "world"
-  Console: "world"
-  Mobile: "world"
+  PC:
+    world: "world"
+    device:
+      - "Windows"
+      - "macOS"
+  Console:
+    world: "world"
+    device:
+      - "Xbox"
+      - "PS4"
+      - "Controller"
+  Mobile:
+    world: "world"
+    device:
+      - "Android"
+      - "iOS"
+      - "Touch"
 
 mysql:
   host: "127.0.0.1"

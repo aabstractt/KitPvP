@@ -1,6 +1,5 @@
 package dev.thatsmybaby.listener;
 
-import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerQuitEvent;
@@ -18,6 +17,10 @@ public class PlayerQuitListener implements Listener {
             return;
         }
 
-        TaskUtils.runAsync(() -> MysqlProvider.getInstance().savePlayerStorage(playerStorage));
+        TaskUtils.runAsync(() -> {
+            MysqlProvider.getInstance().savePlayerStorage(playerStorage);
+
+            PlayerStorage.players.remove(playerStorage.getName().toLowerCase());
+        });
     }
 }

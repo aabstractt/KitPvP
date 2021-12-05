@@ -1,7 +1,6 @@
 package dev.thatsmybaby.listener;
 
 import cn.nukkit.Player;
-import cn.nukkit.Server;
 import cn.nukkit.entity.projectile.EntityArrow;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
@@ -150,7 +149,6 @@ public class EntityDamageListener implements Listener {
                 playerStorage.attack(null);
 
                 TaskUtils.runLater(() -> entity.setHealth(20), 3);
-                //Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> entity.setHealth(20), 3);
             }
 
             return;
@@ -162,11 +160,13 @@ public class EntityDamageListener implements Listener {
     private boolean cancelAttack(PlayerStorage playerStorage, Player target) {
         Player lastAttack = playerStorage.getLastAttack();
 
-        return lastAttack != null && lastAttack.equals(target);
+        return lastAttack != null && !lastAttack.equals(target);
     }
 
     private void handleDeath(Player player, Player killer) {
         String message = KitPvP.getInstance().replacePlaceholders("PLAYER_KILLED", "<player>", player.getName());
+
+        KitPvP.defaultValues(player, null);
 
         if (killer != null) {
             message = KitPvP.getInstance().replacePlaceholders("PLAYER_KILLED_BY", "<player>", player.getName(), "<killer>", killer.getName());

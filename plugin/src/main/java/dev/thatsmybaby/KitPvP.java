@@ -1,11 +1,15 @@
 package dev.thatsmybaby;
 
+import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import dev.thatsmybaby.command.kit.KitCommand;
 import dev.thatsmybaby.command.admin.AdminCommand;
+import dev.thatsmybaby.entity.GameSelectorEntity;
 import dev.thatsmybaby.kit.KitFactory;
 import dev.thatsmybaby.listener.*;
 import dev.thatsmybaby.entity.KitSelectorEntity;
@@ -37,6 +41,7 @@ public class KitPvP extends PluginBase {
             MysqlProvider.getInstance().init(getConfig().get("mysql", new HashMap<>()));
 
             Entity.registerEntity("KitSelectorEntity", KitSelectorEntity.class);
+            Entity.registerEntity("GameSelectorEntity", GameSelectorEntity.class);
 
             for (Map.Entry<String, Object> entry : (new Config(new File(getDataFolder(), "messages.yml"), Config.YAML)).getAll().entrySet()) {
                 this.messages.put(entry.getKey(), entry.getValue().toString());
@@ -48,7 +53,6 @@ public class KitPvP extends PluginBase {
             getServer().getCommandMap().register("admin", new AdminCommand("admin", "Admin commands", "", new String[0]));
             getServer().getCommandMap().register("kit", new KitCommand("kit", "Kit command", "", new String[0]));
 
-            getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
             getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
             getServer().getPluginManager().registerEvents(new CraftItemListener(), this);
@@ -64,6 +68,27 @@ public class KitPvP extends PluginBase {
 
             this.getServer().shutdown();
         }
+    }
+
+    public static void defaultValues(Player player, Level level) {
+        if (level == null) {
+            level = player.getLevel();
+        }
+
+        if (level != null) {
+            player.teleport(level.getSpawnLocation());
+        }
+
+        player.getInventory().clearAll();
+
+        player.extinguish();
+        player.setGamemode(2);
+        player.removeAllEffects();
+        player.setExperience(0, 0);
+
+        player.setHealth(player.getMaxHealth());
+        player.getFoodData().reset();
+        player.setFoodEnabled(false);
     }
 
     public String replacePlaceholders(String key, String... values) {
@@ -83,5 +108,48 @@ public class KitPvP extends PluginBase {
         }
 
         return TextFormat.colorize(message);
+    }
+
+    public static String getDeviceAsString(int os) {
+        switch (os) {
+            case 1:
+                return "Android";
+            case 2:
+                return "iOS";
+            case 3:
+                return "macOS";
+            case 4:
+                return "FireOS";
+            case 5:
+            case 6:
+                return "GearVR";
+            case 7:
+            case 8:
+                return "Windows";
+            case 10:
+                return "TvOS";
+            case 11:
+                return "PS4";
+            case 12:
+                return "Switch";
+            case 13:
+                return "Xbox";
+            default:
+                return "Unknown";
+        }
+    }
+
+    public static String getInputAsString(int input) {
+        switch (input) {
+            case 1:
+                return "Mouse";
+            case 2:
+                return "Touch";
+            case 3:
+                return "Controller";
+
+            default:
+                return "Unkown";
+        }
     }
 }
