@@ -38,8 +38,6 @@ public class KitFactory {
 
             config.set(kit.getKitName(), kit.serialize());
 
-            System.out.println(config.get(kit.getKitName()));
-
             config.save();
         }
     }

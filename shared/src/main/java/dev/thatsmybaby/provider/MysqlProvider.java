@@ -53,19 +53,21 @@ public class MysqlProvider {
             PreparedStatement preparedStatement;
 
             if (getPlayerStorage(playerStorage.getName()) == null) {
-                preparedStatement = this.connection.prepareStatement("INSERT INTO player_stats(username, kills, betterKillStreak, deaths) VALUES (?, ?, ?, ?)");
+                preparedStatement = this.connection.prepareStatement("INSERT INTO player_stats(username, kills, betterKillStreak, deaths, rank_name) VALUES (?, ?, ?, ?, ?)");
 
                 preparedStatement.setString(1, playerStorage.getName());
                 preparedStatement.setInt(2, playerStorage.getTotalKills());
                 preparedStatement.setInt(3, playerStorage.getBetterKillStreak());
                 preparedStatement.setInt(4, playerStorage.getDeaths());
+                preparedStatement.setString(5, playerStorage.getRankName());
             } else {
-                preparedStatement = this.connection.prepareStatement("UPDATE player_stats SET kills = ?, betterKillStreak = ?, deaths = ? WHERE username = ?");
+                preparedStatement = this.connection.prepareStatement("UPDATE player_stats SET kills = ?, betterKillStreak = ?, deaths = ?, rank_name = ? WHERE username = ?");
 
                 preparedStatement.setInt(1, playerStorage.getTotalKills());
                 preparedStatement.setInt(2, playerStorage.getBetterKillStreak());
                 preparedStatement.setInt(3, playerStorage.getDeaths());
-                preparedStatement.setString(4, playerStorage.getName());
+                preparedStatement.setString(4, playerStorage.getRankName());
+                preparedStatement.setString(5, playerStorage.getName());
             }
 
             preparedStatement.executeUpdate();

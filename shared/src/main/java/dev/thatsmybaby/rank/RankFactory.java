@@ -1,11 +1,10 @@
 package dev.thatsmybaby.rank;
 
-import cn.nukkit.Player;
+import cn.nukkit.utils.TextFormat;
 import dev.thatsmybaby.provider.PlayerStorage;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +15,14 @@ public class RankFactory {
 
     private final List<Rank> rankList = new ArrayList<>();
 
+    @SuppressWarnings("unchecked")
     public void init(List<Object> list) {
         for (Object data : list) {
             if (!(data instanceof Map)) {
                 continue;
             }
 
-            this.rankList.add(new Rank((String) ((Map<?, ?>) data).get("format"), (int) ((Map<?, ?>) data).get("minKills"), (int) ((Map<?, ?>) data).get("maxKills")));
+            this.rankList.add(new Rank(TextFormat.colorize((String) ((Map<String, Object>) data).get("format")), (int) ((Map<String, Object>) data).get("minKills"), (int) ((Map<String, Object>) data).get("maxKills")));
         }
     }
 
@@ -45,7 +45,7 @@ public class RankFactory {
 
     public Rank getPlayerRank(PlayerStorage playerStorage) {
         for (Rank rank : this.rankList) {
-            if (rank.getMinKills() > playerStorage.getTotalKills() && rank.getMaxKills() < playerStorage.getTotalKills()) {
+            if (rank.getMinKills() >= playerStorage.getTotalKills() && rank.getMaxKills() >= playerStorage.getTotalKills()) {
                 return rank;
             }
         }

@@ -9,6 +9,7 @@ import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
 import dev.thatsmybaby.provider.MysqlProvider;
 import dev.thatsmybaby.provider.PlayerStorage;
+import dev.thatsmybaby.rank.RankFactory;
 
 public class PlayerJoinListener implements Listener {
 
@@ -21,6 +22,10 @@ public class PlayerJoinListener implements Listener {
 
             if (playerStorage == null) {
                 playerStorage = new PlayerStorage(player.getName(), KitPvP.getInstance().getConfig().getString("default-rank"));
+            }
+
+            if (RankFactory.getInstance().tryUpdateRank(playerStorage)) {
+                player.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_RANK", "<new_rank>", playerStorage.getRankName()));
             }
 
             PlayerStorage.players.put(player.getName().toLowerCase(), playerStorage);
