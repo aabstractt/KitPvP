@@ -1,4 +1,4 @@
-package dev.thatsmybaby;
+package dev.thatsmybaby.task;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;

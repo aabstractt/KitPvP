@@ -5,6 +5,7 @@ import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerFormRespondedEvent;
+import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.response.FormResponseSimple;
 import cn.nukkit.form.window.FormWindowSimple;
 import cn.nukkit.utils.TextFormat;
@@ -12,6 +13,8 @@ import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
 import dev.thatsmybaby.kit.Kit;
 import dev.thatsmybaby.kit.KitFactory;
+import dev.thatsmybaby.room.PrivateRoom;
+import dev.thatsmybaby.room.PrivateRoomFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,13 +68,27 @@ public class PlayerFormRespondedListener implements Listener {
             return;
         }
 
+        FormResponseSimple responseSimple = (FormResponseSimple) ev.getResponse();
+
+        if (responseSimple.getClickedButton().getText().equals(KitPvP.getInstance().replacePlaceholders("GAME_BUTTON_JOIN"))) {
+            player.showFormWindow(showListPrivateGames());
+
+            return;
+        }
+
+        if (responseSimple.getClickedButton().getText().equals(KitPvP.getInstance().replacePlaceholders("GAME_BUTTON_PRIVATE"))) {
+            PrivateRoomFactory.getInstance().createPrivateRoom(player);
+
+            return;
+        }
+
         Map<String, Map<String, Object>> map = KitPvP.getInstance().getConfig().get("type", new HashMap<>());
 
         if (map.isEmpty()) {
             return;
         }
 
-        Map<String, Object> typeData = new ArrayList<>(map.values()).get(((FormResponseSimple) ev.getResponse()).getClickedButtonId());
+        Map<String, Object> typeData = new ArrayList<>(map.values()).get(responseSimple.getClickedButtonId());
         List<String> list = (List<String>) typeData.get("device");
 
         if (!list.contains(KitPvP.getDeviceAsString(player.getLoginChainData().getDeviceOS())) && !list.contains(KitPvP.getInputAsString(player.getLoginChainData().getCurrentInputMode()))) {
@@ -89,5 +106,48 @@ public class PlayerFormRespondedListener implements Listener {
         }
 
         KitPvP.defaultValues(player, Server.getInstance().getLevelByName(world));
+    }
+
+    @EventHandler
+    public void onPlayerFormRespondedEvent1(PlayerFormRespondedEvent ev) {
+        if (ev.wasClosed()) {
+            return;
+        }
+
+        Player player = ev.getPlayer();
+
+        if (!(ev.getWindow() instanceof FormWindowSimple)) {
+            return;
+        }
+
+        if (!((FormWindowSimple) ev.getWindow()).getTitle().equals(KitPvP.getInstance().replacePlaceholders("FORM_PRIVATE_GAMES_TITLE"))) {
+            return;
+        }
+
+        FormResponseSimple responseSimple = (FormResponseSimple) ev.getResponse();
+
+        try {
+            PrivateRoom privateRoom = new ArrayList<>(PrivateRoomFactory.getInstance().getPrivateRoomMap().values()).get(responseSimple.getClickedButtonId());
+
+            if (privateRoom == null || privateRoom.getWorld() == null) {
+                player.sendMessage(TextFormat.RED + "Private room not found");
+
+                return;
+            }
+
+            player.sendMessage(KitPvP.getInstance().replacePlaceholders("TYPE_PASSWORD_CHAT", "<private_room>", privateRoom.getOwnerName()));
+
+            KitPvP.queueJoin.put(player.getName().toLowerCase(), privateRoom);
+        } catch (Exception ignored) {}
+    }
+
+    private FormWindowSimple showListPrivateGames() {
+        FormWindowSimple formWindowSimple = new FormWindowSimple(KitPvP.getInstance().replacePlaceholders("FORM_PRIVATE_GAMES_TITLE"), KitPvP.getInstance().replacePlaceholders("FORM_PRIVATE_GAMES_CONTENT"));
+
+        for (PrivateRoom privateRoom : PrivateRoomFactory.getInstance().getPrivateRoomMap().values()) {
+            formWindowSimple.addButton(new ElementButton(KitPvP.getInstance().replacePlaceholders("FORM_PRIVATE_GAME_BUTTON", "<name>", privateRoom.getOwnerName(), "<players_count>", String.valueOf(privateRoom.getPlayers().size()))));
+        }
+
+        return formWindowSimple;
     }
 }

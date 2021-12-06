@@ -48,6 +48,9 @@ public class GameSelectorEntity extends EntityHuman {
                 formWindowSimple.addButton(new ElementButton(instance.replacePlaceholders("GAME_BUTTON_" + entry.getKey().toUpperCase(), "<players_count>", String.valueOf(level.getPlayers().size()))));
             }
 
+            formWindowSimple.addButton(new ElementButton(instance.replacePlaceholders("GAME_BUTTON_JOIN")));
+            formWindowSimple.addButton(new ElementButton(instance.replacePlaceholders("GAME_BUTTON_PRIVATE")));
+
             target.showFormWindow(formWindowSimple);
         }
 

@@ -13,6 +13,9 @@ import dev.thatsmybaby.entity.KitSelectorEntity;
 import dev.thatsmybaby.kit.KitFactory;
 import dev.thatsmybaby.listener.*;
 import dev.thatsmybaby.provider.MysqlProvider;
+import dev.thatsmybaby.room.PrivateRoom;
+import dev.thatsmybaby.task.PrivateRoomUpdateTask;
+import dev.thatsmybaby.task.ScoreboardUpdateTask;
 import dev.thatsmybaby.zone.ZoneFactory;
 import lombok.Getter;
 
@@ -27,6 +30,8 @@ public class KitPvP extends PluginBase {
     private static KitPvP instance;
 
     private final Map<String, String> messages = new HashMap<>();
+
+    public static final Map<String, PrivateRoom> queueJoin = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -54,6 +59,7 @@ public class KitPvP extends PluginBase {
 
             getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+            getServer().getPluginManager().registerEvents(new PlayerChatListener(), this);
             getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
             getServer().getPluginManager().registerEvents(new CraftItemListener(), this);
             getServer().getPluginManager().registerEvents(new ItemDropListener(), this);
@@ -62,6 +68,7 @@ public class KitPvP extends PluginBase {
             getServer().getPluginManager().registerEvents(new PlayerFormRespondedListener(), this);
 
             getServer().getScheduler().scheduleRepeatingTask(new ScoreboardUpdateTask(this.getConfig().getStringList("worlds")), 20);
+            getServer().getScheduler().scheduleRepeatingTask(new PrivateRoomUpdateTask(), 60);
         } catch (SQLException e) {
             e.printStackTrace();
 

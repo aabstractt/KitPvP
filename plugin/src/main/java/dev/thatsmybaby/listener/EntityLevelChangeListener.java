@@ -6,7 +6,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityLevelChangeEvent;
 import cn.nukkit.level.Level;
 import dev.thatsmybaby.KitPvP;
-import dev.thatsmybaby.ScoreboardUpdateTask;
+import dev.thatsmybaby.task.ScoreboardUpdateTask;
 
 import java.util.List;
 
@@ -32,5 +32,7 @@ public class EntityLevelChangeListener implements Listener {
         if (worlds.contains(target.getFolderName())) {
             ScoreboardUpdateTask.injectScoreboard(player, true);
         }
+
+        System.out.println("Repeating");
     }
 }

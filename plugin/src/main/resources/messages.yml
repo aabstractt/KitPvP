@@ -14,6 +14,15 @@ GAME_SELECTOR_CONTENT: ""
 GAME_BUTTON_PC: "PC\n<players_count> Playing!"
 GAME_BUTTON_MOBILE: "Mobile\n<players_count> Playing!"
 GAME_BUTTON_CONSOLE: "Console\n<players_count> Playing!"
+GAME_BUTTON_PRIVATE: "Crear sala privada"
+GAME_BUTTON_JOIN: "Unirse a sala privada"
+
+FORM_PRIVATE_GAMES_CONTENT: ""
+FORM_PRIVATE_GAMES_TITLE: "Title"
+FORM_PRIVATE_GAME_BUTTON: "<name>\n<players_count> Playing!"
+TYPE_PASSWORD_CHAT: "&aEscribe la contraseña de la sala <private_room> en el chat"
+PASSWORD_INCORRECT: "La contraseña <password> es incorrecta incorrecta"
+PASSWORD_CORRECT: "Contraseña correcta"
 
 INVALID_DEVICE: "Join using; "
 
