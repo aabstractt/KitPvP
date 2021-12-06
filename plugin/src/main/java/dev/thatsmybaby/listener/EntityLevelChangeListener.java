@@ -6,6 +6,8 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityLevelChangeEvent;
 import cn.nukkit.level.Level;
 import dev.thatsmybaby.KitPvP;
+import dev.thatsmybaby.room.PrivateRoom;
+import dev.thatsmybaby.room.PrivateRoomFactory;
 import dev.thatsmybaby.task.ScoreboardUpdateTask;
 
 import java.util.List;
@@ -31,6 +33,16 @@ public class EntityLevelChangeListener implements Listener {
 
         if (worlds.contains(target.getFolderName())) {
             ScoreboardUpdateTask.injectScoreboard(player, true);
+        }
+
+        for (PrivateRoom privateRoom : PrivateRoomFactory.getInstance().getPrivateRoomMap().values()) {
+            if (privateRoom.getWorldName().equalsIgnoreCase(level.getFolderName())) {
+                ScoreboardUpdateTask.scoreboardBuilder.removePlayer(player);
+            }
+
+            if (privateRoom.getWorldName().equalsIgnoreCase(target.getFolderName())) {
+                ScoreboardUpdateTask.injectScoreboard(player, true);
+            }
         }
 
         System.out.println("Repeating");
