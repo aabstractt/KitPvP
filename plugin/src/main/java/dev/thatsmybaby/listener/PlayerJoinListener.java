@@ -5,6 +5,7 @@ import cn.nukkit.Server;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
+import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
 import dev.thatsmybaby.provider.MysqlProvider;
 import dev.thatsmybaby.provider.PlayerStorage;
@@ -19,7 +20,7 @@ public class PlayerJoinListener implements Listener {
             PlayerStorage playerStorage = MysqlProvider.getInstance().getPlayerStorage(player.getName());
 
             if (playerStorage == null) {
-                playerStorage = new PlayerStorage(player.getName());
+                playerStorage = new PlayerStorage(player.getName(), KitPvP.getInstance().getConfig().getString("default-rank"));
             }
 
             PlayerStorage.players.put(player.getName().toLowerCase(), playerStorage);

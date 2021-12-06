@@ -96,7 +96,7 @@ public class MysqlProvider {
             PlayerStorage playerStorage = null;
 
             if (rs.next()) {
-                playerStorage = new PlayerStorage(name, rs.getInt("kills"), 0, 0, rs.getInt("betterKillStreak"), rs.getInt("deaths"), null, -1);
+                playerStorage = new PlayerStorage(name, rs.getInt("kills"), 0, 0, rs.getInt("betterKillStreak"), rs.getInt("deaths"), rs.getString("rank_name"), null, -1);
             }
 
             rs.close();

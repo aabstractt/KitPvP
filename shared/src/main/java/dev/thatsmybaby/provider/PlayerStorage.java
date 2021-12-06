@@ -21,12 +21,15 @@ public class PlayerStorage {
     private int killStreak = 0;
     private int betterKillStreak = 0;
     private int deaths = 0;
+    private String rankName;
 
     private String lastAttack = null;
     private long lastAttackTime = -1;
 
-    public PlayerStorage(String name) {
+    public PlayerStorage(String name, String rankName) {
         this.name = name;
+
+        this.rankName = rankName;
     }
 
     public void increaseKills() {
