@@ -44,7 +44,5 @@ public class EntityLevelChangeListener implements Listener {
                 ScoreboardUpdateTask.injectScoreboard(player, true);
             }
         }
-
-        System.out.println("Repeating");
     }
 }
