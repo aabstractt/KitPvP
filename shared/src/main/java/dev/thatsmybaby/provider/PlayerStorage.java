@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,7 +22,7 @@ public class PlayerStorage {
     private int killStreak = 0;
     private int betterKillStreak = 0;
     private int deaths = 0;
-    private String rankName;
+    @Setter private String rankName;
 
     private String lastAttack = null;
     private long lastAttackTime = -1;
@@ -52,16 +53,20 @@ public class PlayerStorage {
         this.killStreak = 0;
     }
 
-    public void attack(Player attack) {
+    public boolean attack(Player attack) {
         if (attack == null) {
             this.lastAttack = null;
 
-            return;
+            return false;
         }
+
+        boolean updated = !attack.getName().equals(this.lastAttack);
 
         this.lastAttack = attack.getName();
 
         this.lastAttackTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(10);
+
+        return updated;
     }
 
     public Player getLastAttack() {

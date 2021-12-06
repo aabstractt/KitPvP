@@ -2,7 +2,6 @@ package dev.thatsmybaby.room;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import cn.nukkit.level.Level;
 import cn.nukkit.utils.TextFormat;
 import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
@@ -48,7 +47,7 @@ public class PrivateRoomFactory {
         }
 
         String password = String.valueOf(new Random().nextInt());
-        this.privateRoomMap.put(player.getUniqueId(), new PrivateRoom(player.getUniqueId(), player.getName(), password));
+        this.privateRoomMap.put(player.getUniqueId(), new PrivateRoom(player.getUniqueId(), player.getName(), password, -1));
 
         player.sendMessage(TextFormat.GOLD + "Creando sala privada...");
 
@@ -64,17 +63,5 @@ public class PrivateRoomFactory {
                 e.printStackTrace();
             }
         });
-
-        // TODO: Create world backup
-    }
-
-    public void closePrivateRoom(Player player) {
-        PrivateRoom privateRoom = this.privateRoomMap.get(player.getUniqueId());
-
-        if (privateRoom == null) {
-            return;
-        }
-
-        privateRoom.close();
     }
 }

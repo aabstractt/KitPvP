@@ -25,5 +25,7 @@ PASSWORD_INCORRECT: "La contraseña <password> es incorrecta incorrecta"
 PASSWORD_CORRECT: "Contraseña correcta"
 
 INVALID_DEVICE: "Join using; "
+NEW_RANK: "&aSubiste de rango a &b<new_rank>"
+NEW_ATTACK: "&cEmpezaste a pelear contra &6<player>"
 
 SCOREBOARD_TITLE: "&b&lKITPVP"

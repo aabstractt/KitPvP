@@ -13,7 +13,9 @@ import dev.thatsmybaby.entity.KitSelectorEntity;
 import dev.thatsmybaby.kit.KitFactory;
 import dev.thatsmybaby.listener.*;
 import dev.thatsmybaby.provider.MysqlProvider;
+import dev.thatsmybaby.rank.RankFactory;
 import dev.thatsmybaby.room.PrivateRoom;
+import dev.thatsmybaby.room.PrivateRoomFactory;
 import dev.thatsmybaby.task.PrivateRoomUpdateTask;
 import dev.thatsmybaby.task.ScoreboardUpdateTask;
 import dev.thatsmybaby.zone.ZoneFactory;
@@ -53,6 +55,7 @@ public class KitPvP extends PluginBase {
 
             KitFactory.getInstance().init();
             ZoneFactory.getInstance().init();
+            RankFactory.getInstance().init(getConfig().getList("ranks"));
 
             getServer().getCommandMap().register("admin", new AdminCommand("admin", "Admin commands", "", new String[0]));
             getServer().getCommandMap().register("kit", new KitCommand("kit", "Kit command", "", new String[0]));
@@ -77,6 +80,13 @@ public class KitPvP extends PluginBase {
             this.getPluginLoader().disablePlugin(this);
 
             this.getServer().shutdown();
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        for (PrivateRoom privateRoom : PrivateRoomFactory.getInstance().getPrivateRoomMap().values()) {
+            privateRoom.close(false);
         }
     }
 

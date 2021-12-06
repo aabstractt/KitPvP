@@ -34,3 +34,13 @@ scoreboard:
   - "BetterKillStreak: <betterKillStreak>"
   - "Deaths: <deaths>"
   - "Online: <world_online>"
+
+ranks:
+  -
+    format: "&fIronI"
+    minKills: 0
+    maxKills: 10
+  -
+    format: "&fIronII"
+    minKills: 10
+    maxKills: 20

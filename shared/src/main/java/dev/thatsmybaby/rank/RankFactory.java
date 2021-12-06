@@ -1,5 +1,6 @@
 package dev.thatsmybaby.rank;
 
+import cn.nukkit.Player;
 import dev.thatsmybaby.provider.PlayerStorage;
 import lombok.Getter;
 
@@ -25,15 +26,17 @@ public class RankFactory {
         }
     }
 
-    public void tryUpdateRank(PlayerStorage playerStorage) {
+    public boolean tryUpdateRank(PlayerStorage playerStorage) {
         Rank currentRank = getRank(playerStorage.getRankName());
         Rank newRank = getPlayerRank(playerStorage);
 
-        if (currentRank.getName().equals(newRank.getName())) {
-            return;
+        if (currentRank == null || newRank == null || currentRank.getName().equals(newRank.getName())) {
+            return false;
         }
 
         playerStorage.setRankName(newRank.getName());
+
+        return true;
     }
 
     public Rank getRank(String rankName) {

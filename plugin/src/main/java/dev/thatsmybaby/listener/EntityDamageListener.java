@@ -10,6 +10,7 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
 import dev.thatsmybaby.provider.PlayerStorage;
+import dev.thatsmybaby.rank.RankFactory;
 import dev.thatsmybaby.zone.ZoneFactory;
 
 public class EntityDamageListener implements Listener {
@@ -35,62 +36,69 @@ public class EntityDamageListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent ev) {
-        if (ev.getDamager() instanceof Player && ev.getEntity() instanceof Player) {
-
-            Player damager = (Player) ev.getDamager();
-            Player entity = (Player) ev.getEntity();
-
-            if (ZoneFactory.getInstance().inZone(damager)) {
-                ev.setCancelled();
-
-                return;
-            }
-
-            if (ZoneFactory.getInstance().inZone(entity)) {
-                ev.setCancelled();
-
-                return;
-            }
-
-            PlayerStorage playerStorage = PlayerStorage.of(entity);
-            PlayerStorage targetStorage = PlayerStorage.of(damager);
-
-            if (playerStorage == null || targetStorage == null) {
-                ev.setCancelled();
-
-                return;
-            }
-
-            if (cancelAttack(playerStorage, damager) || cancelAttack(targetStorage, entity)) {
-                ev.setCancelled();
-
-                return;
-            }
-
-            playerStorage.attack(damager);
-            targetStorage.attack(entity);
-
-            double dmg = entity.getHealth() - ev.getFinalDamage();
-
-            if (dmg < 1.0) {
-                ev.setCancelled(true);
-
-                handleDeath(entity, damager);
-
-                targetStorage.increaseKills();
-                playerStorage.death();
-
-                targetStorage.attack(null);
-                playerStorage.attack(null);
-
-                TaskUtils.runLater(() -> entity.setHealth(20), 3);
-                //Server.getInstance().getScheduler().scheduleDelayedTask(KitPvP.getInstance(), () -> entity.setHealth(20), 3);
-            }
+        if (!(ev.getDamager() instanceof Player) || !(ev.getEntity() instanceof Player)) {
+            ev.setCancelled(true);
 
             return;
         }
 
-        ev.setCancelled(true);
+        Player damager = (Player) ev.getDamager();
+        Player entity = (Player) ev.getEntity();
+
+        if (ZoneFactory.getInstance().inZone(damager)) {
+            ev.setCancelled();
+
+            return;
+        }
+
+        if (ZoneFactory.getInstance().inZone(entity)) {
+            ev.setCancelled();
+
+            return;
+        }
+
+        PlayerStorage playerStorage = PlayerStorage.of(entity);
+        PlayerStorage targetStorage = PlayerStorage.of(damager);
+
+        if (playerStorage == null || targetStorage == null) {
+            ev.setCancelled();
+
+            return;
+        }
+
+        if (cancelAttack(playerStorage, damager) || cancelAttack(targetStorage, entity)) {
+            ev.setCancelled();
+
+            return;
+        }
+
+        if (playerStorage.attack(damager)) {
+            entity.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_ATTACK", "<player>", damager.getName()));
+        }
+
+        if (targetStorage.attack(entity)) {
+            damager.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_ATTACK", "<player>", entity.getName()));
+        }
+
+        double dmg = entity.getHealth() - ev.getFinalDamage();
+
+        if (dmg < 1.0) {
+            ev.setCancelled(true);
+
+            handleDeath(entity, damager);
+
+            targetStorage.increaseKills();
+            playerStorage.death();
+
+            if (RankFactory.getInstance().tryUpdateRank(targetStorage)) {
+                damager.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_RANK", "<new_rank>", targetStorage.getRankName()));
+            }
+
+            targetStorage.attack(null);
+            playerStorage.attack(null);
+
+            TaskUtils.runLater(() -> entity.setHealth(20), 3);
+        }
     }
 
     @EventHandler
@@ -132,8 +140,13 @@ public class EntityDamageListener implements Listener {
                 return;
             }
 
-            playerStorage.attack(shooter);
-            targetStorage.attack(entity);
+            if (playerStorage.attack(shooter)) {
+                entity.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_ATTACK", "<player>", shooter.getName()));
+            }
+
+            if (targetStorage.attack(entity)) {
+                shooter.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_ATTACK", "<player>", entity.getName()));
+            }
 
             float dmg = entity.getHealth() - ev.getFinalDamage();
 
@@ -144,6 +157,10 @@ public class EntityDamageListener implements Listener {
 
                 targetStorage.increaseKills();
                 playerStorage.death();
+
+                if (RankFactory.getInstance().tryUpdateRank(targetStorage)) {
+                    shooter.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_RANK", "<new_rank>", targetStorage.getRankName()));
+                }
 
                 targetStorage.attack(null);
                 playerStorage.attack(null);

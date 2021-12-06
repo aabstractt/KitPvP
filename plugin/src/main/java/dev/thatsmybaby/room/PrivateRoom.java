@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +23,8 @@ public class PrivateRoom {
     private final UUID owner;
     private final String ownerName;
     private final String password;
+
+    private long waitingTime;
 
     public String getWorldName() {
         return this.password;
@@ -39,7 +42,21 @@ public class PrivateRoom {
         return new HashSet<>(this.getWorld().getPlayers().values());
     }
 
-    public void close() {
+    public boolean ownerInside() {
+        Player player = Server.getInstance().getPlayer(this.owner).orElse(null);
+
+        return player != null && player.getLevel().getFolderName().equals(this.getWorldName());
+    }
+
+    public void startWaitingTime() {
+        this.startWaitingTime(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(10));
+    }
+
+    public void startWaitingTime(long time) {
+        this.waitingTime = time;
+    }
+
+    public void close(boolean async) {
         for (Player target : this.getPlayers()) {
             if (target.getName().equalsIgnoreCase(this.getOwnerName())) {
                 continue;
@@ -58,20 +75,26 @@ public class PrivateRoom {
             }
         } catch (Exception ignored) {}
 
-        TaskUtils.runLater(() -> {
-            File file = new File(Server.getInstance().getDataPath() + "/worlds/" + this.getWorldName());
+        File file = new File(Server.getInstance().getDataPath() + "/worlds/" + this.getWorldName());
 
-            if (!file.isDirectory()) {
-                return;
-            }
+        if (!file.isDirectory()) {
+            return;
+        }
 
-            TaskUtils.runAsync(() -> {
-                try {
-                    FileUtils.deleteDirectory(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }, 30);
+        if (!async) {
+            deleteDirectory(file);
+
+            return;
+        }
+
+        TaskUtils.runAsync(() -> deleteDirectory(file));
+    }
+
+    private void deleteDirectory(File file) {
+        try {
+            FileUtils.deleteDirectory(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

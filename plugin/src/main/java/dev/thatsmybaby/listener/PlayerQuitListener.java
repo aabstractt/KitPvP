@@ -8,7 +8,6 @@ import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
 import dev.thatsmybaby.provider.MysqlProvider;
 import dev.thatsmybaby.provider.PlayerStorage;
-import dev.thatsmybaby.room.PrivateRoomFactory;
 
 public class PlayerQuitListener implements Listener {
 
@@ -22,7 +21,6 @@ public class PlayerQuitListener implements Listener {
             return;
         }
 
-        PrivateRoomFactory.getInstance().closePrivateRoom(player);
         KitPvP.queueJoin.remove(player.getName().toLowerCase());
 
         TaskUtils.runAsync(() -> {
