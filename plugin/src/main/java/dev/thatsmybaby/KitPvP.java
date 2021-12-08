@@ -191,14 +191,14 @@ public class KitPvP extends PluginBase {
     public static String getInputAsString(int input) {
         switch (input) {
             case 1:
-                return "Mouse";
+                return "Keyboard";
             case 2:
                 return "Touch";
             case 3:
-                return "Controller";
+                return "Mando";
 
             default:
-                return "Unkown";
+                return "Unknown";
         }
     }
 }

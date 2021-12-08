@@ -12,6 +12,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.kit.Kit;
 import dev.thatsmybaby.kit.KitFactory;
+import dev.thatsmybaby.provider.PlayerStorage;
 
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class KitSelectorEntity extends EntityHuman {
 
         if (source instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) source).getDamager() instanceof Player) {
             Player target = (Player) ((EntityDamageByEntityEvent) source).getDamager();
+            PlayerStorage playerStorage = PlayerStorage.of(target);
 
             Map<String, Kit> kits = KitFactory.getInstance().getKits();
 
@@ -40,7 +42,7 @@ public class KitSelectorEntity extends EntityHuman {
 
             for (Kit kit : kits.values()) {
                 formWindowSimple.addButton(
-                        new ElementButton(KitPvP.replacePlaceholders("KIT_BUTTON", "<kit_name>", kit.getKitName()),
+                        new ElementButton(KitPvP.replacePlaceholders(playerStorage.getKits().contains(kit.getKitName()) ? "KIT_BUTTON" : "KIT_BUTTON_BUY", "<kit_name>", kit.getKitName(), "<price>", String.valueOf(kit.getPrice())),
                         new ElementButtonImageData(ElementButtonImageData.IMAGE_DATA_TYPE_PATH, KitPvP.getInstance().getConfig().get("kit_image." + kit.getKitName(), "apple")))
                 );
             }

@@ -1,6 +1,7 @@
 KIT_WINDOW_TITLE: "&e&lKIT SELECTOR"
 KIT_WINDOW_CONTENT: "&eSelect a kit"
 KIT_BUTTON: "&8<kit_name>\n&fClick to select"
+KIT_BUTTON_BUY: "&8<kit_name>\n&b<price> &8Coins"
 
 KITS_NOT_FOUND: "&cKits available not found"
 KIT_SELECTED: "&aKit <kit_name> selected!"
@@ -30,11 +31,13 @@ NEW_ATTACK: "&cEmpezaste a pelear contra &6<player>"
 
 KIT_LOCKED: "El kit <kit_name> está bloqueado para ti, usa /kit buy <kit_name> para comprarlo"
 KIT_ALREADY_UNLOCKED: "&cYa tienes el kit <kit_name>"
-YOU_DONT_HAVE_ENOUGH_COINS: "&cNo tienes suficientes monedas, necesitas <coins_needed> y tienes <coins> coins"
+YOU_DONT_HAVE_ENOUGH_COINS: "&cNo tienes suficientes monedas, necesitas <coins_need> y tienes <coins> coins"
 KIT_PURCHASED: "&aKit <kit_name> comprado por <price>"
-
+TARGET_ALREADY_FIGHTING: "<player> ya esta peleando contra alguien más"
+YOU_ALREADY_FIGHTING: "Ya te encuentras peleando contra <target>"
 PLAYER_NAME_TAG: "<player>\n<kills_rank>\n❤ <health>/20\n&b<device>"
 GAME_SELECTOR_ENTITY: "&b&lKITPVP\n&f<players_count> Playing!"
 SCOREBOARD_TITLE: "&b&lKITPVP"
 LEADERBOARD_TITLE: "&b&lLEADERBOARD\n"
 LEADERBOARD_PLAYER: "<position> <player> - <kills>\n"
+FIGHTING: "Estas peleando contra <fighting>, tiempo <time_left>"

@@ -44,7 +44,7 @@ public class PlayerFormRespondedListener implements Listener {
             Kit kit = new ArrayList<>(KitFactory.getInstance().getKits().values()).get(((FormResponseSimple) ev.getResponse()).getClickedButtonId());
 
             if (!PlayerStorage.of(player).getKits().contains(kit.getKitName())) {
-                player.sendMessage(KitPvP.replacePlaceholders("KIT_LOCKED", "<kit_name>", kit.getKitName()));
+                Server.getInstance().dispatchCommand(player, "kit buy " + kit.getKitName());
 
                 return;
             }

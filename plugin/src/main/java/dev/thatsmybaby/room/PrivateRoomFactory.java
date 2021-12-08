@@ -25,7 +25,15 @@ public class PrivateRoomFactory {
 
     public void createPrivateRoom(Player player) {
         if (this.privateRoomMap.containsKey(player.getUniqueId())) {
-            player.sendMessage(TextFormat.RED + "You already have a private room");
+            PrivateRoom privateRoom = this.privateRoomMap.get(player.getUniqueId());
+
+            if (privateRoom.getWorld() != null) {
+                player.teleport(privateRoom.getWorld().getSpawnLocation());
+
+                return;
+            }
+
+            privateRoom.close(true);
 
             return;
         }
@@ -46,7 +54,7 @@ public class PrivateRoomFactory {
             return;
         }
 
-        String password = String.valueOf(new Random().nextInt());
+        String password = String.valueOf(new Random().nextInt(10000));
         this.privateRoomMap.put(player.getUniqueId(), new PrivateRoom(player.getUniqueId(), player.getName(), password, -1));
 
         player.sendMessage(TextFormat.GOLD + "Creando sala privada...");

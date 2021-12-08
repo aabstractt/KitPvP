@@ -6,6 +6,7 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityLevelChangeEvent;
 import cn.nukkit.level.Level;
 import dev.thatsmybaby.KitPvP;
+import dev.thatsmybaby.provider.PlayerStorage;
 import dev.thatsmybaby.room.PrivateRoom;
 import dev.thatsmybaby.room.PrivateRoomFactory;
 import dev.thatsmybaby.task.ScoreboardUpdateTask;
@@ -21,6 +22,7 @@ public class EntityLevelChangeListener implements Listener {
         }
 
         Player player = (Player) ev.getEntity();
+        PlayerStorage playerStorage = PlayerStorage.of(player);
 
         Level level = ev.getOrigin();
 
@@ -35,5 +37,7 @@ public class EntityLevelChangeListener implements Listener {
                 ScoreboardUpdateTask.scoreboardBuilder.removePlayer(player);
             }
         }
+
+        playerStorage.kills();
     }
 }

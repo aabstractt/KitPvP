@@ -57,6 +57,7 @@ public class ScoreboardUpdateTask extends Task {
                     "<deaths>", String.valueOf(playerStorage.getDeaths()),
                     "<killStreak>", String.valueOf(playerStorage.getKillStreak()),
                     "<betterKillStreak>", String.valueOf(playerStorage.getBetterKillStreak()),
+                    "<coins>", String.valueOf(playerStorage.getCoins()),
                     "<world_online>", String.valueOf(player.getLevel().getPlayers().size()),
                     "<has_pvp>", Boolean.toString(!playerStorage.getAttackingName().equals("")),
                     "<fighting>", playerStorage.getAttackingName(),
@@ -66,6 +67,12 @@ public class ScoreboardUpdateTask extends Task {
 
             if (finalLine != null) {
                 lines.add(finalLine);
+            }
+
+            Player lastAttack = playerStorage.getLastAttack();
+
+            if (lastAttack != null) {
+                player.sendPopup(KitPvP.replacePlaceholders("FIGHTING", "<fighting>", lastAttack.getName(), "<time_left>", String.valueOf(TimeUnit.MILLISECONDS.toSeconds(playerStorage.getLastAttackTime() - System.currentTimeMillis()))));
             }
         }
 

@@ -207,6 +207,29 @@ public class MysqlProvider {
         return kits;
     }
 
+    public void deleteKills() {
+        if (this.connection == null) {
+            return;
+        }
+
+        try {
+            PreparedStatement preparedStatement = this.connection.prepareStatement("UPDATE player_stats SET kills = ? WHERE rowId >= 0");
+
+            preparedStatement.setInt(1, 0);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            try {
+                intentConnect(this.data);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     private void intentConnect(Map<String, Object> data) throws SQLException {
         if (data.isEmpty()) {
             return;

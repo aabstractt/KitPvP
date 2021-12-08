@@ -1,6 +1,7 @@
 package dev.thatsmybaby.listener;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.entity.projectile.EntityArrow;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
@@ -46,6 +47,10 @@ public class EntityDamageListener implements Listener {
         Player damager = (Player) ev.getDamager();
         Player entity = (Player) ev.getEntity();
 
+        if (damager.getLevel() == Server.getInstance().getDefaultLevel()) {
+            return;
+        }
+
         if (ZoneFactory.getInstance().inZone(damager)) {
             ev.setCancelled();
 
@@ -68,6 +73,8 @@ public class EntityDamageListener implements Listener {
         }
 
         if (cancelAttack(playerStorage, damager) || cancelAttack(targetStorage, entity)) {
+            damager.sendMessage(cancelAttack(playerStorage, damager) ? KitPvP.replacePlaceholders("TARGET_ALREADY_FIGHTING", "<player>", playerStorage.getName()) : KitPvP.replacePlaceholders("YOU_ALREADY_FIGHTING", "<target>", targetStorage.getAttackingName()));
+
             ev.setCancelled();
 
             return;
@@ -98,6 +105,10 @@ public class EntityDamageListener implements Listener {
             Player shooter = (Player) ev.getDamager();
             Player entity = (Player) ev.getEntity();
 
+            if (shooter.getLevel() == Server.getInstance().getDefaultLevel()) {
+                return;
+            }
+
             if (ZoneFactory.getInstance().inZone(shooter)) {
                 ev.setCancelled();
 
@@ -126,6 +137,8 @@ public class EntityDamageListener implements Listener {
             }
 
             if (cancelAttack(playerStorage, shooter) || cancelAttack(targetStorage, entity)) {
+                shooter.sendMessage(cancelAttack(playerStorage, shooter) ? KitPvP.replacePlaceholders("TARGET_ALREADY_FIGHTING", "<player>", playerStorage.getName()) : KitPvP.replacePlaceholders("YOU_ALREADY_FIGHTING", "<target>", targetStorage.getAttackingName()));
+
                 ev.setCancelled();
 
                 return;
@@ -176,6 +189,8 @@ public class EntityDamageListener implements Listener {
         if (RankFactory.getInstance().tryUpdateRank(targetStorage)) {
             killer.sendMessage(KitPvP.replacePlaceholders("NEW_RANK", "<new_rank>", targetStorage.getRankName()));
         }
+
+        killer.setHealth(killer.getMaxHealth());
 
         targetStorage.attack(null);
         playerStorage.attack(null);

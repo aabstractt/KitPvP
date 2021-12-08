@@ -2,7 +2,6 @@ package dev.thatsmybaby.provider;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
-import dev.thatsmybaby.TaskUtils;
 import dev.thatsmybaby.rank.Rank;
 import dev.thatsmybaby.rank.RankFactory;
 import lombok.AllArgsConstructor;
@@ -63,14 +62,25 @@ public class PlayerStorage {
             return;
         }
 
-        this.coins -= decrease;
+        int newCoins = this.coins - decrease;
+
+        if (newCoins <= 0) {
+            newCoins = 0;
+        }
+
+        this.coins = newCoins;
+    }
+
+    public void kills() {
+        this.kills = 0;
+
+        this.killStreak = 0;
     }
 
     public void death() {
         this.deaths++;
 
-        this.kills = 0;
-        this.killStreak = 0;
+        kills();
     }
 
     public boolean attack(Player attack) {
