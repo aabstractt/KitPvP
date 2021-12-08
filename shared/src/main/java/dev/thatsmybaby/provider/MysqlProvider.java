@@ -118,6 +118,39 @@ public class MysqlProvider {
         return null;
     }
 
+    public List<PlayerStorage> getLeaderboard(String column, int limit) {
+        if (this.connection == null) {
+            return new ArrayList<>();
+        }
+
+        List<PlayerStorage> list = new ArrayList<>();
+
+        try {
+            PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT * FROM player_stats ORDER BY ? DESC LIMIT ?");
+
+            preparedStatement.setString(1, column);
+            preparedStatement.setInt(2, limit);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                list.add(new PlayerStorage(rs.getString("username"), rs.getInt("kills"), 0, 0, rs.getInt("betterKillStreak"), rs.getInt("deaths"), rs.getInt("coins"), rs.getString("rank_name"), new ArrayList<>(), null, -1));
+            }
+
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            try {
+                intentConnect(this.data);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return list;
+    }
+
     public void unlockKit(String name, String kitName) {
         if (this.connection == null) {
             return;

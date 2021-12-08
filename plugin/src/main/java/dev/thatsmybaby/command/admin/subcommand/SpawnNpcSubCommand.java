@@ -8,6 +8,7 @@ import cn.nukkit.utils.TextFormat;
 import dev.thatsmybaby.command.PlayerSubCommand;
 import dev.thatsmybaby.entity.GameSelectorEntity;
 import dev.thatsmybaby.entity.KitSelectorEntity;
+import dev.thatsmybaby.entity.LeaderboardEntity;
 
 public class SpawnNpcSubCommand extends PlayerSubCommand {
 
@@ -28,6 +29,10 @@ public class SpawnNpcSubCommand extends PlayerSubCommand {
             entity = (GameSelectorEntity) Entity.createEntity("GameSelectorEntity", sender.getChunk(), nbt);
 
             entity.setNameTag(TextFormat.YELLOW + TextFormat.BOLD.toString() + "GAME SELECTOR");
+        } else if (args[0].equalsIgnoreCase("leaderboard")) {
+            entity = (LeaderboardEntity) Entity.createEntity("LeaderboardEntity", sender.getChunk(), nbt);
+
+            entity.setNameTag(TextFormat.YELLOW + TextFormat.BOLD.toString() + "LEADERBOARD");
         }
 
         if (entity == null) {

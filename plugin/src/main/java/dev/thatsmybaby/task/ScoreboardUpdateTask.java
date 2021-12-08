@@ -16,15 +16,15 @@ public class ScoreboardUpdateTask extends Task {
 
     public static ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(KitPvP.replacePlaceholders("SCOREBOARD_TITLE"), "KitPvP", ScoreboardBuilder.SIDEBAR, ScoreboardBuilder.DESCENDING);
 
-    private final List<String> worlds;
+    public static List<String> worlds;
 
     public ScoreboardUpdateTask(List<String> worlds) {
-        this.worlds = worlds;
+        ScoreboardUpdateTask.worlds = worlds;
     }
 
     @Override
     public void onRun(int i) {
-        for (String world : this.worlds) {
+        for (String world : worlds) {
             Level level = Server.getInstance().getLevelByName(world);
 
             if (level == null) {
@@ -60,7 +60,7 @@ public class ScoreboardUpdateTask extends Task {
                     "<world_online>", String.valueOf(player.getLevel().getPlayers().size()),
                     "<has_pvp>", Boolean.toString(!playerStorage.getAttackingName().equals("")),
                     "<fighting>", playerStorage.getAttackingName(),
-                    "<time_left>", String.valueOf(TimeUnit.MICROSECONDS.toSeconds(playerStorage.getLastAttackTime() - 10)),
+                    "<time_left>", String.valueOf(TimeUnit.MILLISECONDS.toSeconds(playerStorage.getLastAttackTime() - System.currentTimeMillis())),
                     "<online>", String.valueOf(Server.getInstance().getOnlinePlayers().size())
             );
 

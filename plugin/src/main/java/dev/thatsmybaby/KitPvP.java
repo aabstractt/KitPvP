@@ -10,12 +10,15 @@ import dev.thatsmybaby.command.admin.AdminCommand;
 import dev.thatsmybaby.command.kit.KitCommand;
 import dev.thatsmybaby.entity.GameSelectorEntity;
 import dev.thatsmybaby.entity.KitSelectorEntity;
+import dev.thatsmybaby.entity.LeaderboardEntity;
 import dev.thatsmybaby.kit.KitFactory;
 import dev.thatsmybaby.listener.*;
 import dev.thatsmybaby.provider.MysqlProvider;
 import dev.thatsmybaby.rank.RankFactory;
 import dev.thatsmybaby.room.PrivateRoom;
 import dev.thatsmybaby.room.PrivateRoomFactory;
+import dev.thatsmybaby.task.LeaderboardUpdateTask;
+import dev.thatsmybaby.task.PlayerUpdateTask;
 import dev.thatsmybaby.task.PrivateRoomUpdateTask;
 import dev.thatsmybaby.task.ScoreboardUpdateTask;
 import dev.thatsmybaby.zone.ZoneFactory;
@@ -49,6 +52,7 @@ public class KitPvP extends PluginBase {
 
             Entity.registerEntity("KitSelectorEntity", KitSelectorEntity.class);
             Entity.registerEntity("GameSelectorEntity", GameSelectorEntity.class);
+            Entity.registerEntity("LeaderboardEntity", LeaderboardEntity.class);
 
             for (Map.Entry<String, Object> entry : (new Config(new File(getDataFolder(), "messages.yml"), Config.YAML)).getAll().entrySet()) {
                 messages.put(entry.getKey(), entry.getValue().toString());
@@ -71,8 +75,10 @@ public class KitPvP extends PluginBase {
             getServer().getPluginManager().registerEvents(new EntityLevelChangeListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerFormRespondedListener(), this);
 
+            getServer().getScheduler().scheduleRepeatingTask(new LeaderboardUpdateTask(), 60);
             getServer().getScheduler().scheduleRepeatingTask(new ScoreboardUpdateTask(this.getConfig().getStringList("worlds")), 20);
-            getServer().getScheduler().scheduleRepeatingTask(new PrivateRoomUpdateTask(), 60);
+            getServer().getScheduler().scheduleRepeatingTask(new PlayerUpdateTask(), 20);
+            getServer().getScheduler().scheduleRepeatingTask(new PrivateRoomUpdateTask(), 20);
         } catch (SQLException e) {
             e.printStackTrace();
 

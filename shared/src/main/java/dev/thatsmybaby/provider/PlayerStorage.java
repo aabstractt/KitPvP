@@ -2,6 +2,9 @@ package dev.thatsmybaby.provider;
 
 import cn.nukkit.Player;
 import cn.nukkit.Server;
+import dev.thatsmybaby.TaskUtils;
+import dev.thatsmybaby.rank.Rank;
+import dev.thatsmybaby.rank.RankFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -98,6 +101,10 @@ public class PlayerStorage {
         Player target = getLastAttack();
 
         return target == null ? "" : target.getName();
+    }
+
+    public Rank getRank() {
+        return RankFactory.getInstance().getRank(this.rankName);
     }
 
     public static PlayerStorage of(Player player) {

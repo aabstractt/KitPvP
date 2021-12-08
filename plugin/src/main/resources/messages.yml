@@ -33,4 +33,8 @@ KIT_ALREADY_UNLOCKED: "&cYa tienes el kit <kit_name>"
 YOU_DONT_HAVE_ENOUGH_COINS: "&cNo tienes suficientes monedas, necesitas <coins_needed> y tienes <coins> coins"
 KIT_PURCHASED: "&aKit <kit_name> comprado por <price>"
 
+PLAYER_NAME_TAG: "<player>\n<kills_rank>\n❤ <health>/20\n&b<device>"
+GAME_SELECTOR_ENTITY: "&b&lKITPVP\n&f<players_count> Playing!"
 SCOREBOARD_TITLE: "&b&lKITPVP"
+LEADERBOARD_TITLE: "&b&lLEADERBOARD\n"
+LEADERBOARD_PLAYER: "<position> <player> - <kills>\n"

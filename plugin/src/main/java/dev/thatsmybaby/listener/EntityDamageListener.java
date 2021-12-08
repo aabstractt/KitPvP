@@ -9,6 +9,7 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
 import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
+import dev.thatsmybaby.provider.MysqlProvider;
 import dev.thatsmybaby.provider.PlayerStorage;
 import dev.thatsmybaby.rank.RankFactory;
 import dev.thatsmybaby.zone.ZoneFactory;
@@ -167,6 +168,7 @@ public class EntityDamageListener implements Listener {
 
         targetStorage.increaseKills();
         targetStorage.increaseCoins(KitPvP.getInstance().getConfig().getInt("coins.kill-won", 1));
+        TaskUtils.runAsync(() -> MysqlProvider.getInstance().savePlayerStorage(targetStorage));
 
         playerStorage.decreaseCoins(KitPvP.getInstance().getConfig().getInt("coins.death-lost", 1));
         playerStorage.death();
