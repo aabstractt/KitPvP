@@ -75,7 +75,7 @@ public class KitPvP extends PluginBase {
             getServer().getPluginManager().registerEvents(new EntityLevelChangeListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerFormRespondedListener(), this);
 
-            getServer().getScheduler().scheduleRepeatingTask(new LeaderboardUpdateTask(), 60);
+            getServer().getScheduler().scheduleRepeatingTask(new LeaderboardUpdateTask(), 60, true);
             getServer().getScheduler().scheduleRepeatingTask(new ScoreboardUpdateTask(this.getConfig().getStringList("worlds")), 20);
             getServer().getScheduler().scheduleRepeatingTask(new PlayerUpdateTask(), 20);
             getServer().getScheduler().scheduleRepeatingTask(new PrivateRoomUpdateTask(), 20);
