@@ -22,9 +22,9 @@ public class PlayerChatListener implements Listener {
         }
 
         if (!privateRoom.getPassword().equals(message)) {
-            player.sendMessage(KitPvP.getInstance().replacePlaceholders("PASSWORD_INCORRECT", "<password>", message));
+            player.sendMessage(KitPvP.replacePlaceholders("PASSWORD_INCORRECT", "<password>", message));
         } else {
-            player.sendMessage(KitPvP.getInstance().replacePlaceholders("PASSWORD_CORRECT"));
+            player.sendMessage(KitPvP.replacePlaceholders("PASSWORD_CORRECT"));
 
             if (privateRoom.getWorld() != null) {
                 player.teleport(privateRoom.getWorld().getSpawnLocation());

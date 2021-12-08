@@ -25,7 +25,7 @@ public class PlayerJoinListener implements Listener {
             }
 
             if (RankFactory.getInstance().tryUpdateRank(playerStorage)) {
-                player.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_RANK", "<new_rank>", playerStorage.getRankName()));
+                player.sendMessage(KitPvP.replacePlaceholders("NEW_RANK", "<new_rank>", playerStorage.getRankName()));
             }
 
             PlayerStorage.players.put(player.getName().toLowerCase(), playerStorage);

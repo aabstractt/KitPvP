@@ -31,16 +31,16 @@ public class KitSelectorEntity extends EntityHuman {
             Map<String, Kit> kits = KitFactory.getInstance().getKits();
 
             if (kits.isEmpty()) {
-                target.sendMessage(KitPvP.getInstance().replacePlaceholders("KITS_NOT_FOUND"));
+                target.sendMessage(KitPvP.replacePlaceholders("KITS_NOT_FOUND"));
 
                 return false;
             }
 
-            FormWindowSimple formWindowSimple = new FormWindowSimple(KitPvP.getInstance().replacePlaceholders("KIT_WINDOW_TITLE"), KitPvP.getInstance().replacePlaceholders("KIT_WINDOW_CONTENT"));
+            FormWindowSimple formWindowSimple = new FormWindowSimple(KitPvP.replacePlaceholders("KIT_WINDOW_TITLE"), KitPvP.replacePlaceholders("KIT_WINDOW_CONTENT"));
 
             for (Kit kit : kits.values()) {
                 formWindowSimple.addButton(
-                        new ElementButton(KitPvP.getInstance().replacePlaceholders("KIT_BUTTON", "<kit_name>", kit.getKitName()),
+                        new ElementButton(KitPvP.replacePlaceholders("KIT_BUTTON", "<kit_name>", kit.getKitName()),
                         new ElementButtonImageData(ElementButtonImageData.IMAGE_DATA_TYPE_PATH, KitPvP.getInstance().getConfig().get("kit_image." + kit.getKitName(), "apple")))
                 );
             }

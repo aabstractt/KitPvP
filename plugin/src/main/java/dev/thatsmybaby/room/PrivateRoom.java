@@ -62,7 +62,7 @@ public class PrivateRoom {
                 continue;
             }
 
-            target.sendMessage(KitPvP.getInstance().replacePlaceholders("PRIVATE_ROOM_CLOSED", "<owner>", this.getOwnerName()));
+            target.sendMessage(KitPvP.replacePlaceholders("PRIVATE_ROOM_CLOSED", "<owner>", this.getOwnerName()));
 
             target.teleport(Server.getInstance().getDefaultLevel().getSpawnLocation());
         }

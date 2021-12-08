@@ -19,7 +19,7 @@ public class ZoneSubCommand extends PlayerSubCommand {
 
     @Override
     public void execute(Player sender, String label, String[] args) {
-        this.positions.add(sender);
+        this.positions.add(sender.getPosition());
 
         if (this.positions.size() == 2) {
             ZoneFactory.getInstance().addZone(this.positions.get(0), this.positions.get(1));

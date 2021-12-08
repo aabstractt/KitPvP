@@ -26,7 +26,7 @@ public class KitFactory {
         for (Map.Entry<String, Object> entry : (new Config(file, Config.YAML)).getAll().entrySet()) {
             KitPvP.getInstance().getLogger().info("Loading " + entry.getKey() + " kit...");
 
-            this.addKit(Kit.deserialize(entry.getKey(), (Map<String, Map<Integer, String>>) entry.getValue()), false);
+            this.addKit(Kit.deserialize(entry.getKey(), (Map<String, Map<Integer, String>>) entry.getValue(), KitPvP.getInstance().getConfig().getInt("kit." + entry.getKey(), 0)), false);
         }
     }
 
@@ -39,6 +39,9 @@ public class KitFactory {
             config.set(kit.getKitName(), kit.serialize());
 
             config.save();
+
+            KitPvP.getInstance().getConfig().set("kit." + kit.getKitName(), kit.getPrice());
+            KitPvP.getInstance().saveConfig();
         }
     }
 

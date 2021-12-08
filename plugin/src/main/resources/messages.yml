@@ -28,4 +28,8 @@ INVALID_DEVICE: "Join using; "
 NEW_RANK: "&aSubiste de rango a &b<new_rank>"
 NEW_ATTACK: "&cEmpezaste a pelear contra &6<player>"
 
+KIT_ALREADY_UNLOCKED: "&cYa tienes el kit <kit_name>"
+YOU_DONT_HAVE_ENOUGH_COINS: "&cNo tienes suficientes monedas, necesitas <coins_needed> y tienes <coins> coins"
+KIT_PURCHASED: "&aKit <kit_name> comprado por <price>"
+
 SCOREBOARD_TITLE: "&b&lKITPVP"

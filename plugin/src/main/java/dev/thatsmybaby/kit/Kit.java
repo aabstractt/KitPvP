@@ -14,6 +14,7 @@ public class Kit {
 
     private String kitName;
     private Map<Integer, Item> items;
+    private int price;
 
     public Map<String, Map<Integer, String>> serialize() {
         Map<Integer, String> items = new HashMap<>();
@@ -25,11 +26,11 @@ public class Kit {
         }};
     }
 
-    public static Kit deserialize(String kitName, Map<String, Map<Integer, String>> serialized) {
+    public static Kit deserialize(String kitName, Map<String, Map<Integer, String>> serialized, int price) {
         Map<Integer, Item> items = new HashMap<>();
 
         serialized.get("items").forEach((slot, string) -> items.put(slot, ItemUtils.stringToItem(string)));
 
-        return new Kit(kitName, items);
+        return new Kit(kitName, items, price);
     }
 }

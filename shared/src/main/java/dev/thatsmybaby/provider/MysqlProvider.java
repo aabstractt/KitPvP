@@ -3,9 +3,7 @@ package dev.thatsmybaby.provider;
 import lombok.Getter;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class MysqlProvider {
 
@@ -53,21 +51,23 @@ public class MysqlProvider {
             PreparedStatement preparedStatement;
 
             if (getPlayerStorage(playerStorage.getName()) == null) {
-                preparedStatement = this.connection.prepareStatement("INSERT INTO player_stats(username, kills, betterKillStreak, deaths, rank_name) VALUES (?, ?, ?, ?, ?)");
+                preparedStatement = this.connection.prepareStatement("INSERT INTO player_stats(username, kills, betterKillStreak, deaths, coins, rank_name) VALUES (?, ?, ?, ?, ?, ?)");
 
                 preparedStatement.setString(1, playerStorage.getName());
                 preparedStatement.setInt(2, playerStorage.getTotalKills());
                 preparedStatement.setInt(3, playerStorage.getBetterKillStreak());
                 preparedStatement.setInt(4, playerStorage.getDeaths());
-                preparedStatement.setString(5, playerStorage.getRankName());
+                preparedStatement.setInt(5, playerStorage.getCoins());
+                preparedStatement.setString(6, playerStorage.getRankName());
             } else {
-                preparedStatement = this.connection.prepareStatement("UPDATE player_stats SET kills = ?, betterKillStreak = ?, deaths = ?, rank_name = ? WHERE username = ?");
+                preparedStatement = this.connection.prepareStatement("UPDATE player_stats SET kills = ?, betterKillStreak = ?, deaths = ?, coins = ?, rank_name = ? WHERE username = ?");
 
                 preparedStatement.setInt(1, playerStorage.getTotalKills());
                 preparedStatement.setInt(2, playerStorage.getBetterKillStreak());
                 preparedStatement.setInt(3, playerStorage.getDeaths());
-                preparedStatement.setString(4, playerStorage.getRankName());
-                preparedStatement.setString(5, playerStorage.getName());
+                preparedStatement.setInt(4, playerStorage.getCoins());
+                preparedStatement.setString(5, playerStorage.getRankName());
+                preparedStatement.setString(6, playerStorage.getName());
             }
 
             preparedStatement.executeUpdate();
@@ -98,7 +98,7 @@ public class MysqlProvider {
             PlayerStorage playerStorage = null;
 
             if (rs.next()) {
-                playerStorage = new PlayerStorage(name, rs.getInt("kills"), 0, 0, rs.getInt("betterKillStreak"), rs.getInt("deaths"), rs.getString("rank_name"), null, -1);
+                playerStorage = new PlayerStorage(name, rs.getInt("kills"), 0, 0, rs.getInt("betterKillStreak"), rs.getInt("deaths"), rs.getInt("coins"), rs.getString("rank_name"), this.getKitsUnlocked(name), null, -1);
             }
 
             rs.close();
@@ -116,6 +116,62 @@ public class MysqlProvider {
         }
 
         return null;
+    }
+
+    public void unlockKit(String name, String kitName) {
+        if (this.connection == null) {
+            return;
+        }
+
+        try {
+            PreparedStatement preparedStatement = this.connection.prepareStatement("INSERT INTO player_kits(username, kit_name) VALUES (?, ?)");
+
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, kitName);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            try {
+                intentConnect(this.data);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public List<String> getKitsUnlocked(String name) {
+        if (this.connection == null) {
+            return new ArrayList<>();
+        }
+
+        List<String> kits = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT * FROM player_kits WHERE username = ?");
+
+            preparedStatement.setString(1, name);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                kits.add(rs.getString("kit_name"));
+            }
+
+            rs.close();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            try {
+                intentConnect(this.data);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return kits;
     }
 
     private void intentConnect(Map<String, Object> data) throws SQLException {
@@ -136,7 +192,7 @@ public class MysqlProvider {
     }
 
     private void createDatabase(Map<String, Object> data) throws SQLException {
-        this.connection = DriverManager.getConnection("jdbc:mysql://" + data.get("host") + ":" + data.get("port"),  (String) data.get("user"), (String) data.get("password"));
+        this.connection = DriverManager.getConnection("jdbc:mysql://" + data.get("host") + ":" + data.get("port"), (String) data.get("user"), (String) data.get("password"));
 
         Statement statement = this.connection.createStatement();
 
@@ -148,7 +204,12 @@ public class MysqlProvider {
     }
 
     private void createTables() throws SQLException {
-        PreparedStatement preparedStatement = this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS player_stats (rowId INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(16), kills INT, betterKillStreak INT, deaths INT)");
+        PreparedStatement preparedStatement = this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS player_stats (rowId INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(16), kills INT, betterKillStreak INT, deaths INT, coins INT, rank_name TEXT)");
+
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+
+        preparedStatement = this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS player_kits(rowId INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(16), kit_name VARCHAR(16))");
 
         preparedStatement.executeUpdate();
         preparedStatement.close();

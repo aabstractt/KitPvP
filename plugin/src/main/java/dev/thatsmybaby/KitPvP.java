@@ -31,11 +31,12 @@ public class KitPvP extends PluginBase {
     @Getter
     private static KitPvP instance;
 
-    private final Map<String, String> messages = new HashMap<>();
+    private static final Map<String, String> messages = new HashMap<>();
 
     public static final Map<String, PrivateRoom> queueJoin = new HashMap<>();
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onEnable() {
         instance = this;
         TaskUtils.plugin = this;
@@ -50,7 +51,7 @@ public class KitPvP extends PluginBase {
             Entity.registerEntity("GameSelectorEntity", GameSelectorEntity.class);
 
             for (Map.Entry<String, Object> entry : (new Config(new File(getDataFolder(), "messages.yml"), Config.YAML)).getAll().entrySet()) {
-                this.messages.put(entry.getKey(), entry.getValue().toString());
+                messages.put(entry.getKey(), entry.getValue().toString());
             }
 
             KitFactory.getInstance().init();
@@ -111,8 +112,8 @@ public class KitPvP extends PluginBase {
         player.setFoodEnabled(false);
     }
 
-    public String replacePlaceholders(String key, String... values) {
-        String message = this.messages.getOrDefault(key, key);
+    public static String replacePlaceholders(String key, String... values) {
+        String message = messages.getOrDefault(key, key);
 
         if (values.length >= 2) {
             for (int i = 0; i < values.length; i += 2) {
@@ -127,7 +128,29 @@ public class KitPvP extends PluginBase {
             }
         }
 
-        return TextFormat.colorize(message);
+        return shouldDisplay(TextFormat.colorize(message));
+    }
+
+    private static String shouldDisplay(String text) {
+        if (!text.contains("<display=")) {
+            return text;
+        }
+
+        String clearText = text.split("<display=")[1];
+
+        return clearText.equalsIgnoreCase("!true")
+                || clearText.equalsIgnoreCase("false")
+                || clearText.equalsIgnoreCase("true&&false")
+                || clearText.equalsIgnoreCase("false&&true")
+                || clearText.equalsIgnoreCase("true&&!true")
+                || clearText.equalsIgnoreCase("!true&&true")
+                || clearText.equalsIgnoreCase("!true&&!true")
+                || clearText.equalsIgnoreCase("false&&!true")
+                || clearText.equalsIgnoreCase("!false&&!false")
+                || clearText.equalsIgnoreCase("!false&&false")
+                || clearText.equalsIgnoreCase("false&&!false")
+                || clearText.equalsIgnoreCase("false&&false")
+                || clearText.equalsIgnoreCase("!true&&false") ?null : text.split("<display=")[0];
     }
 
     public static String getDeviceAsString(int os) {

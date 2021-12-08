@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +24,10 @@ public class PlayerStorage {
     private int killStreak = 0;
     private int betterKillStreak = 0;
     private int deaths = 0;
+    private int coins = 0;
     @Setter private String rankName;
+
+    private List<String> kits = new ArrayList<>();
 
     private String lastAttack = null;
     private long lastAttackTime = -1;
@@ -44,6 +49,18 @@ public class PlayerStorage {
         if (this.killStreak > this.betterKillStreak) {
             this.betterKillStreak = this.killStreak;
         }
+    }
+
+    public void increaseCoins(int increase) {
+        this.coins += increase;
+    }
+
+    public void decreaseCoins(int decrease) {
+        if (decrease == 0) {
+            return;
+        }
+
+        this.coins -= decrease;
     }
 
     public void death() {
@@ -75,6 +92,12 @@ public class PlayerStorage {
         }
 
         return Server.getInstance().getPlayerExact(this.lastAttack);
+    }
+
+    public String getAttackingName() {
+        Player target = getLastAttack();
+
+        return target == null ? "" : target.getName();
     }
 
     public static PlayerStorage of(Player player) {

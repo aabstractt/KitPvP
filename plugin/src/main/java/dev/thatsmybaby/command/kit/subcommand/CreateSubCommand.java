@@ -14,8 +14,8 @@ public class CreateSubCommand extends PlayerSubCommand {
 
     @Override
     public void execute(Player player, String label, String[] args) {
-        if (args.length < 1) {
-            player.sendMessage(TextFormat.RED + "Usage: /kit create <kitName>");
+        if (args.length < 2) {
+            player.sendMessage(TextFormat.RED + "Usage: /kit create <kitName> <price>");
 
             return;
         }
@@ -26,7 +26,7 @@ public class CreateSubCommand extends PlayerSubCommand {
             return;
         }
 
-        KitFactory.getInstance().addKit(new Kit(args[0], player.getInventory().getContents()), true);
+        KitFactory.getInstance().addKit(new Kit(args[0], player.getInventory().getContents(), Integer.parseInt(args[1])), true);
 
         player.sendMessage(TextFormat.GREEN + "Kit " + args[0] + " created!");
     }

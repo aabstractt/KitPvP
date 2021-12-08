@@ -75,6 +75,8 @@ public class ZoneFactory {
                 put("min", vectorToMap(zone.getMin()));
                 put("max", vectorToMap(zone.getMax()));
             }});
+
+            i++;
         }
 
         Config config = new Config(new File(KitPvP.getInstance().getDataFolder(), "zones.yml"), Config.YAML);
@@ -83,11 +85,11 @@ public class ZoneFactory {
         config.save();
     }
 
-    private Vector3 mapToVector(Map<String, Integer> map) {
+    public static Vector3 mapToVector(Map<String, Integer> map) {
         return new Vector3(map.get("x"), map.get("y"), map.get("z"));
     }
 
-    private Map<String, Integer> vectorToMap(Vector3 vector3) {
+    public static Map<String, Integer> vectorToMap(Vector3 vector3) {
         return new HashMap<String, Integer>() {{
             put("x", vector3.getFloorX());
             put("y", vector3.getFloorY());

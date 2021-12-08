@@ -26,6 +26,11 @@ mysql:
 
 worlds:
   - "world"
+world-private-room: "world"
+
+coins:
+  kill-won: 1
+  death-lost: 1
 
 scoreboard:
   - "Kills: <kills>"
@@ -33,8 +38,13 @@ scoreboard:
   - "Killstreak: <killStreak>"
   - "BetterKillStreak: <betterKillStreak>"
   - "Deaths: <deaths>"
+  - "&f<display=<has_pvp>"
+  - "Peleando: <fighting><display=<has_pvp>"
+  - "Tiempo: <time_left><display=<has_pvp>"
+  - "&d<display=<has_pvp>"
   - "Online: <world_online>"
 
+default-rank: "IronI"
 ranks:
   -
     format: "&fIronI"

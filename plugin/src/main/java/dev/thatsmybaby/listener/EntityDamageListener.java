@@ -73,11 +73,11 @@ public class EntityDamageListener implements Listener {
         }
 
         if (playerStorage.attack(damager)) {
-            entity.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_ATTACK", "<player>", damager.getName()));
+            entity.sendMessage(KitPvP.replacePlaceholders("NEW_ATTACK", "<player>", damager.getName()));
         }
 
         if (targetStorage.attack(entity)) {
-            damager.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_ATTACK", "<player>", entity.getName()));
+            damager.sendMessage(KitPvP.replacePlaceholders("NEW_ATTACK", "<player>", entity.getName()));
         }
 
         double dmg = entity.getHealth() - ev.getFinalDamage();
@@ -85,17 +85,7 @@ public class EntityDamageListener implements Listener {
         if (dmg < 1.0) {
             ev.setCancelled(true);
 
-            handleDeath(entity, damager);
-
-            targetStorage.increaseKills();
-            playerStorage.death();
-
-            if (RankFactory.getInstance().tryUpdateRank(targetStorage)) {
-                damager.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_RANK", "<new_rank>", targetStorage.getRankName()));
-            }
-
-            targetStorage.attack(null);
-            playerStorage.attack(null);
+            handleDeath(entity, damager, playerStorage, targetStorage);
 
             TaskUtils.runLater(() -> entity.setHealth(20), 3);
         }
@@ -141,11 +131,11 @@ public class EntityDamageListener implements Listener {
             }
 
             if (playerStorage.attack(shooter)) {
-                entity.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_ATTACK", "<player>", shooter.getName()));
+                entity.sendMessage(KitPvP.replacePlaceholders("NEW_ATTACK", "<player>", shooter.getName()));
             }
 
             if (targetStorage.attack(entity)) {
-                shooter.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_ATTACK", "<player>", entity.getName()));
+                shooter.sendMessage(KitPvP.replacePlaceholders("NEW_ATTACK", "<player>", entity.getName()));
             }
 
             float dmg = entity.getHealth() - ev.getFinalDamage();
@@ -153,17 +143,7 @@ public class EntityDamageListener implements Listener {
             if (dmg < 1.0) {
                 ev.setCancelled(true);
 
-                handleDeath(entity, shooter);
-
-                targetStorage.increaseKills();
-                playerStorage.death();
-
-                if (RankFactory.getInstance().tryUpdateRank(targetStorage)) {
-                    shooter.sendMessage(KitPvP.getInstance().replacePlaceholders("NEW_RANK", "<new_rank>", targetStorage.getRankName()));
-                }
-
-                targetStorage.attack(null);
-                playerStorage.attack(null);
+                handleDeath(entity, shooter, playerStorage, targetStorage);
 
                 TaskUtils.runLater(() -> entity.setHealth(20), 3);
             }
@@ -180,14 +160,23 @@ public class EntityDamageListener implements Listener {
         return lastAttack != null && !lastAttack.equals(target);
     }
 
-    private void handleDeath(Player player, Player killer) {
-        String message = KitPvP.getInstance().replacePlaceholders("PLAYER_KILLED", "<player>", player.getName());
+    private void handleDeath(Player player, Player killer, PlayerStorage playerStorage, PlayerStorage targetStorage) {
+        String message = KitPvP.replacePlaceholders("PLAYER_KILLED_BY", "<player>", player.getName(), "<killer>", killer.getName());
 
         KitPvP.defaultValues(player, null);
 
-        if (killer != null) {
-            message = KitPvP.getInstance().replacePlaceholders("PLAYER_KILLED_BY", "<player>", player.getName(), "<killer>", killer.getName());
+        targetStorage.increaseKills();
+        targetStorage.increaseCoins(KitPvP.getInstance().getConfig().getInt("coins.kill-won", 1));
+
+        playerStorage.decreaseCoins(KitPvP.getInstance().getConfig().getInt("coins.death-lost", 1));
+        playerStorage.death();
+
+        if (RankFactory.getInstance().tryUpdateRank(targetStorage)) {
+            killer.sendMessage(KitPvP.replacePlaceholders("NEW_RANK", "<new_rank>", targetStorage.getRankName()));
         }
+
+        targetStorage.attack(null);
+        playerStorage.attack(null);
 
         for (Player target : player.getLevel().getPlayers().values()) {
             target.sendMessage(message);

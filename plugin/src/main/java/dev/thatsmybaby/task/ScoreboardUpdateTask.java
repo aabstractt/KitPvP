@@ -8,11 +8,13 @@ import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.provider.PlayerStorage;
 import dev.thatsmybaby.scoreboard.ScoreboardBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ScoreboardUpdateTask extends Task {
 
-    public static ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(KitPvP.getInstance().replacePlaceholders("SCOREBOARD_TITLE"), "KitPvP", ScoreboardBuilder.SIDEBAR, ScoreboardBuilder.DESCENDING);
+    public static ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(KitPvP.replacePlaceholders("SCOREBOARD_TITLE"), "KitPvP", ScoreboardBuilder.SIDEBAR, ScoreboardBuilder.DESCENDING);
 
     private final List<String> worlds;
 
@@ -42,22 +44,37 @@ public class ScoreboardUpdateTask extends Task {
             return;
         }
 
-        if (add) {
-            scoreboardBuilder.addPlayer(player);
-        }
+        scoreboardBuilder.removePlayer(player);
+        scoreboardBuilder.addPlayer(player);
 
+        /*if (add) {
+            scoreboardBuilder.addPlayer(player);
+        }*/
+
+        List<String> lines = new ArrayList<>();
         List<String> list = KitPvP.getInstance().getConfig().getStringList("scoreboard");
 
-        for (int i = 0; i < list.size(); i++) {
-            scoreboardBuilder.setLine(i, KitPvP.getInstance().replacePlaceholders(list.get(i),
+        for (String line : list) {
+            String finalLine = KitPvP.replacePlaceholders(line,
                     "<totalKills>", String.valueOf(playerStorage.getTotalKills()),
                     "<kills>", String.valueOf(playerStorage.getKills()),
                     "<deaths>", String.valueOf(playerStorage.getDeaths()),
                     "<killStreak>", String.valueOf(playerStorage.getKillStreak()),
                     "<betterKillStreak>", String.valueOf(playerStorage.getBetterKillStreak()),
                     "<world_online>", String.valueOf(player.getLevel().getPlayers().size()),
+                    "<has_pvp>", Boolean.toString(!playerStorage.getAttackingName().equals("")),
+                    "<fighting>", playerStorage.getAttackingName(),
+                    "<time_left>", String.valueOf(TimeUnit.MICROSECONDS.toSeconds(playerStorage.getLastAttackTime() - 10)),
                     "<online>", String.valueOf(Server.getInstance().getOnlinePlayers().size())
-            ), player);
+            );
+
+            if (finalLine != null) {
+                lines.add(finalLine);
+            }
+        }
+
+        for (int i = 0; i < lines.size(); i++) {
+            scoreboardBuilder.setLine(i, lines.get(i), player);
         }
     }
 }
