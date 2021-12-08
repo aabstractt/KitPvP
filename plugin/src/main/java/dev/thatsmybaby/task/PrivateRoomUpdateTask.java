@@ -11,7 +11,7 @@ public class PrivateRoomUpdateTask extends Task {
     public void onRun(int i) {
         for (PrivateRoom privateRoom : PrivateRoomFactory.getInstance().getPrivateRoomMap().values()) {
             for (Player target : privateRoom.getPlayers()) {
-                ScoreboardUpdateTask.injectScoreboard(target, false);
+                ScoreboardUpdateTask.injectScoreboard(target);
             }
 
             long timeWaiting = privateRoom.getWaitingTime();

@@ -4,8 +4,6 @@ import cn.nukkit.math.Vector3;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Map;
-
 @Getter
 @AllArgsConstructor
 public class Zone {

@@ -32,12 +32,12 @@ public class ScoreboardUpdateTask extends Task {
             }
 
             for (Player player : level.getPlayers().values()) {
-                injectScoreboard(player, false);
+                injectScoreboard(player);
             }
         }
     }
 
-    public static void injectScoreboard(Player player, boolean add) {
+    public static void injectScoreboard(Player player) {
         PlayerStorage playerStorage = PlayerStorage.of(player);
 
         if (playerStorage == null) {
@@ -46,10 +46,6 @@ public class ScoreboardUpdateTask extends Task {
 
         scoreboardBuilder.removePlayer(player);
         scoreboardBuilder.addPlayer(player);
-
-        /*if (add) {
-            scoreboardBuilder.addPlayer(player);
-        }*/
 
         List<String> lines = new ArrayList<>();
         List<String> list = KitPvP.getInstance().getConfig().getStringList("scoreboard");

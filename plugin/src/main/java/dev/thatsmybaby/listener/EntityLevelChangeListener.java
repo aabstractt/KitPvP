@@ -23,7 +23,6 @@ public class EntityLevelChangeListener implements Listener {
         Player player = (Player) ev.getEntity();
 
         Level level = ev.getOrigin();
-        Level target = ev.getTarget();
 
         List<String> worlds = KitPvP.getInstance().getConfig().getStringList("worlds");
 
@@ -31,17 +30,9 @@ public class EntityLevelChangeListener implements Listener {
             ScoreboardUpdateTask.scoreboardBuilder.removePlayer(player);
         }
 
-        if (worlds.contains(target.getFolderName())) {
-            ScoreboardUpdateTask.injectScoreboard(player, true);
-        }
-
         for (PrivateRoom privateRoom : PrivateRoomFactory.getInstance().getPrivateRoomMap().values()) {
             if (privateRoom.getWorldName().equalsIgnoreCase(level.getFolderName())) {
                 ScoreboardUpdateTask.scoreboardBuilder.removePlayer(player);
-            }
-
-            if (privateRoom.getWorldName().equalsIgnoreCase(target.getFolderName())) {
-                ScoreboardUpdateTask.injectScoreboard(player, true);
             }
         }
     }

@@ -13,6 +13,7 @@ import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.TaskUtils;
 import dev.thatsmybaby.kit.Kit;
 import dev.thatsmybaby.kit.KitFactory;
+import dev.thatsmybaby.provider.PlayerStorage;
 import dev.thatsmybaby.room.PrivateRoom;
 import dev.thatsmybaby.room.PrivateRoomFactory;
 
@@ -41,6 +42,12 @@ public class PlayerFormRespondedListener implements Listener {
 
         try {
             Kit kit = new ArrayList<>(KitFactory.getInstance().getKits().values()).get(((FormResponseSimple) ev.getResponse()).getClickedButtonId());
+
+            if (!PlayerStorage.of(player).getKits().contains(kit.getKitName())) {
+                player.sendMessage(KitPvP.replacePlaceholders("KIT_LOCKED", "<kit_name>", kit.getKitName()));
+
+                return;
+            }
 
             player.getInventory().clearAll();
             player.getInventory().setContents(kit.getItems());
