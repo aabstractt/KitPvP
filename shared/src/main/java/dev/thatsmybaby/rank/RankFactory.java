@@ -1,6 +1,5 @@
 package dev.thatsmybaby.rank;
 
-import cn.nukkit.utils.TextFormat;
 import dev.thatsmybaby.provider.PlayerStorage;
 import lombok.Getter;
 
@@ -22,11 +21,13 @@ public class RankFactory {
                 continue;
             }
 
-            this.rankList.add(new Rank(TextFormat.colorize((String) ((Map<String, Object>) data).get("format")), (int) ((Map<String, Object>) data).get("minKills"), (int) ((Map<String, Object>) data).get("maxKills")));
+            this.rankList.add(new Rank((String) ((Map<String, Object>) data).get("format"), (int) ((Map<String, Object>) data).get("minKills"), (int) ((Map<String, Object>) data).get("maxKills")));
         }
     }
 
     public boolean tryUpdateRank(PlayerStorage playerStorage) {
+        System.out.println(this.rankList);
+
         Rank currentRank = getRank(playerStorage.getRankName());
         Rank newRank = getPlayerRank(playerStorage);
 
@@ -40,7 +41,7 @@ public class RankFactory {
     }
 
     public Rank getRank(String rankName) {
-        return this.rankList.stream().filter(rank -> rank.getName().equals(rankName)).findAny().orElse(null);
+        return this.rankList.stream().filter(rank -> rank.getName().equalsIgnoreCase(rankName)).findAny().orElse(null);
     }
 
     public Rank getPlayerRank(PlayerStorage playerStorage) {

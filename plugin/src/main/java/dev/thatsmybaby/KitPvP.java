@@ -6,6 +6,7 @@ import cn.nukkit.level.Level;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
+import dev.thatsmybaby.command.HubCommand;
 import dev.thatsmybaby.command.admin.AdminCommand;
 import dev.thatsmybaby.command.kit.KitCommand;
 import dev.thatsmybaby.entity.GameSelectorEntity;
@@ -64,6 +65,7 @@ public class KitPvP extends PluginBase {
 
             getServer().getCommandMap().register("admin", new AdminCommand("admin", "Admin commands", "", new String[0]));
             getServer().getCommandMap().register("kit", new KitCommand("kit", "Kit command", "", new String[0]));
+            getServer().getCommandMap().register("hub", new HubCommand("hub"));
 
             getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
             getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);

@@ -5,6 +5,7 @@ import cn.nukkit.Server;
 import cn.nukkit.scheduler.Task;
 import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.provider.PlayerStorage;
+import dev.thatsmybaby.rank.Rank;
 
 public class PlayerUpdateTask extends Task {
 
@@ -17,7 +18,13 @@ public class PlayerUpdateTask extends Task {
                 continue;
             }
 
-            player.setNameTag(KitPvP.replacePlaceholders("PLAYER_NAME_TAG", "<player>", player.getName(), "<kills_rank>", playerStorage.getRank().getFormat(), "<health>", String.valueOf(player.getHealth()), "<device>", KitPvP.getDeviceAsString(player.getLoginChainData().getDeviceOS()), "<input>", KitPvP.getInputAsString(player.getLoginChainData().getCurrentInputMode())));
+            Rank rank = playerStorage.getRank();
+
+            if (rank == null) {
+                continue;
+            }
+
+            player.setNameTag(KitPvP.replacePlaceholders("PLAYER_NAME_TAG", "<player>", player.getName(), "<kills_rank>", rank.getFormat(), "<health>", String.valueOf(player.getHealth()), "<device>", KitPvP.getDeviceAsString(player.getLoginChainData().getDeviceOS()), "<input>", KitPvP.getInputAsString(player.getLoginChainData().getCurrentInputMode())));
         }
     }
 }

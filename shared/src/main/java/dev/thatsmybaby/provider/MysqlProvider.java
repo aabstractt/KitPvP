@@ -118,7 +118,7 @@ public class MysqlProvider {
         return null;
     }
 
-    public List<PlayerStorage> getLeaderboard(String column, int limit) {
+    public List<PlayerStorage> getLeaderboard() {
         if (this.connection == null) {
             return new ArrayList<>();
         }
@@ -126,10 +126,7 @@ public class MysqlProvider {
         List<PlayerStorage> list = new ArrayList<>();
 
         try {
-            PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT * FROM player_stats ORDER BY ? DESC LIMIT ?");
-
-            preparedStatement.setString(1, column);
-            preparedStatement.setInt(2, limit);
+            PreparedStatement preparedStatement = this.connection.prepareStatement("SELECT *, @curRank := @curRank + 1 AS `position` FROM `player_stats`, (SELECT @curRank := 0) r ORDER BY `kills` DESC LIMIT 10");
 
             ResultSet rs = preparedStatement.executeQuery();
 

@@ -16,7 +16,7 @@ public class LeaderboardUpdateTask extends Task {
 
     @Override
     public void onRun(int i) {
-        List<PlayerStorage> list = MysqlProvider.getInstance().getLeaderboard("kills", 10);
+        List<PlayerStorage> list = MysqlProvider.getInstance().getLeaderboard();
 
         list.sort((o1, o2) -> Integer.compare(o2.getTotalKills(), o1.getTotalKills()));
 
