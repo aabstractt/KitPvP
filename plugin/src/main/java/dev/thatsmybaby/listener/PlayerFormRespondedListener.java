@@ -84,6 +84,12 @@ public class PlayerFormRespondedListener implements Listener {
         }
 
         if (responseSimple.getClickedButton().getText().equals(KitPvP.replacePlaceholders("GAME_BUTTON_PRIVATE"))) {
+            if (!player.hasPermission("privateroom.create")) {
+                player.sendMessage(TextFormat.RED + "You don't have permissions to use this.");
+
+                return;
+            }
+
             PrivateRoomFactory.getInstance().createPrivateRoom(player);
 
             return;
