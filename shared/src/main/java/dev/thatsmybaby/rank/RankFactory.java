@@ -26,8 +26,6 @@ public class RankFactory {
     }
 
     public boolean tryUpdateRank(PlayerStorage playerStorage) {
-        System.out.println(this.rankList);
-
         Rank currentRank = getRank(playerStorage.getRankName());
         Rank newRank = getPlayerRank(playerStorage);
 
