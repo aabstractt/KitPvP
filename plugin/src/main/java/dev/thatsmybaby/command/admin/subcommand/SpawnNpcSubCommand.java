@@ -5,6 +5,7 @@ import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
+import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.command.PlayerSubCommand;
 import dev.thatsmybaby.entity.GameSelectorEntity;
 import dev.thatsmybaby.entity.KitSelectorEntity;
@@ -24,7 +25,7 @@ public class SpawnNpcSubCommand extends PlayerSubCommand {
         if (args[0].equalsIgnoreCase("kit")) {
             entity = (KitSelectorEntity) Entity.createEntity("KitSelectorEntity", sender.getChunk(), nbt);
 
-            entity.setNameTag(TextFormat.YELLOW + TextFormat.BOLD.toString() + "KIT SELECTOR");
+            entity.setNameTag(KitPvP.replacePlaceholders("KIT_SELECTOR_NAMETAG"));
         } else if (args[0].equalsIgnoreCase("game")) {
             entity = (GameSelectorEntity) Entity.createEntity("GameSelectorEntity", sender.getChunk(), nbt);
 

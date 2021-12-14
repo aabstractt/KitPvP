@@ -2,6 +2,7 @@ package dev.thatsmybaby.task;
 
 import cn.nukkit.Server;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.level.Level;
 import cn.nukkit.scheduler.Task;
 import dev.thatsmybaby.KitPvP;
 import dev.thatsmybaby.entity.LeaderboardEntity;
@@ -29,8 +30,10 @@ public class LeaderboardUpdateTask extends Task {
             x++;
         }
 
-        for (Entity entity : Arrays.stream(Server.getInstance().getDefaultLevel().getEntities()).filter(entity -> entity instanceof LeaderboardEntity).collect(Collectors.toList())) {
-            entity.setNameTag(text.toString());
+        for (Level level : Server.getInstance().getLevels().values()) {
+            for (Entity entity : Arrays.stream(level.getEntities()).filter(entity -> entity instanceof LeaderboardEntity).collect(Collectors.toList())) {
+                entity.setNameTag(text.toString());
+            }
         }
     }
 }

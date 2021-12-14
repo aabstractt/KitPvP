@@ -9,6 +9,7 @@ KIT_SELECTED: "&aKit <kit_name> selected!"
 PLAYER_KILLED: "&a<player> was killed!"
 PLAYER_KILLED_BY: "&c<player> was killed by <killer>"
 
+KIT_SELECTOR_NAMETAG: "&b&lKIT SELECTOR"
 GAME_SELECTOR_TITLE: "Select a type"
 GAME_SELECTOR_CONTENT: ""
 
